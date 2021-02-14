@@ -83,48 +83,50 @@ Describe the different roles on the team and the responsibilities associated wit
 List each team member and:
  * A description of their role(s) and responsibilities including the components they'll work on and non-software related work
  * 3 technical strengths and weaknesses each (e.g. languages, frameworks, libraries, development methodologies, etc.)
+ 
  **Shirley**  - Project Management: Communicating and Organizing
 + Web Dev Experience with Node/React
 + UI/UX Design
 + Agile
 - No Shopify API Experience
 - No GraphQL Experience
-- 
+
 **Peiwen**ear  - Prototyping
 + UI/UX Design
 + Web Dev Experience with Node/React
 + Prototype
 - No Shopify API Experience
 - No GraphQL Experience
-- 
-**Frank** - 
+
+**Frank** 
 + Node/React/Vue
 + Android
 + postgresQL/MongoDB
 - No Shopify API Experience
 - No GraphQL Experience
-- 
-**Leishi** - 
+
+**Leishi** 
 + Node/React
 + postgresQL/MongoDB
 + UI/UX Design
 - No Shopify API Experience
 - No GraphQL Experience
 - unfamiliar iar with testing environments
-**Ziang** - 
+
+**Ziang** 
 + postgresQL/MongoDB
 + Node/React
 + Mobile
 - No Shopify API Experience
 - No GraphQL Experience
 - Unfamiliar with testing environments
-**Zimo** - 
+
+**Zimo** 
 + Cloud Platform
 + Node/React
 + Mobile
 - No Shopify API Experience
 - No GraphQL Experience
-- 
 
 #### Q7: What operational events will you have as a team?
 
