@@ -121,13 +121,25 @@ We would vote on the options we have and choose the one that is commonly agreed.
 ----
 ## Highlights
 
-Specify 3 - 5 key decisions and/or insights that came up during your meetings
-and/or collaborative process.
+The first iteration of the application we had was to create a suite of digital inventory management systems that is capable of directly communicating with the POS system in the respective stores. We soon realized that such a system will be beyond the scope of our ability as none of our team members had experience working with POS systems that is enough to create a solution that directly connects them to an online database. 
 
- * Short (5 min' read max)
- * Decisions can be related to the product and/or the team process.
-    * Mention which alternatives you were considering.
-    * Present the arguments for each alternative.
-    * Explain why the option you decided on makes the most sense for your team/product/users.
- * Essentially, we want to understand how (and why) you ended up with your current product and process plan.
- * This section is useful for important information regarding your decision making process that may not necessarily fit in other sections. 
+After which, we researched solutions that are currently available on the market. The partner pointed out that some major issues with the existing solutions are the costs, with most costing $500-1000/month as they are aimed towards larger retail chains, and others confining the users into their ecosystem that forces the adoption of their entire solution.
+
+With this information, we came up with a second and final iteration of the application, an inventory management system in the form of a Shopify app. This solution provides the most amount of connectivity with the user’s digital storefront as it will be a part of their Shopify store, while providing us technical support with the already existing community of developers in the Shopify ecosystem.
+
+Tech Stack
+After finalizing the idea that the application will be an application within the user’s Shopify store, We went on to decide which tech stack will be used, and decided to use Node/React with GraphQL as our database solution.
+1. Ruby/Sinatra
+	+ The legacy solution for Shopify apps of which most of them are built from.
+	+ A detailed guide of how to build a Shopify app based on this tech stack[https://shopify.dev/tutorials/build-a-shopify-app-with-ruby-and-sinatra]
+	- Lack of experience with the tech stack
+	- No official Polaris library support
+2. Node/React
+	+ The newer more popular solution for Shopify applications
+	+ Shopify Polaris component support
+	+ Team experience with stack
+	- Potentially slower development compare to Ruby
+
+Interface
+
+At first, the method of updating the database of our choice was to use a CSV file that the user will curate each day with the record of their sales, as CSV files contain all the required information and are very easy to parse through. After communicating with the partner, we found out that this may be too much of a requirement for the less tech-savvy users. We then decided to switch to taking in Excel Sheets and User manually entering each sales record in order to include those users.
