@@ -91,7 +91,7 @@ List each team member and:
 - No Shopify API Experience
 - No GraphQL Experience
 
-**Peiwen**ear  - Prototyping
+**Peiwen**  - Prototyping
 + UI/UX Design
 + Web Dev Experience with Node/React
 + Prototype
