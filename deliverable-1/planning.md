@@ -23,6 +23,7 @@ Personas:
 #### Q4: How will you build it?
 
 The tech stack that we’ll be using will consist of React frontend and Node backend. We’ll be using mySQL as our database to store all our information as well. We’ll also be using Next.js framework to set everything up and will be using GraphQL to interact with the Shopify API that we’ll be heavily using. Deployment will be done through Heroku, and testing will be done through Mocha, which has both backend and frontend testing functionality. Additionally, we also have access to an actual store through Shopify and further development/staging testing can be done there. 
+
 As for a high level overview, we will be separating frontend and backend. 
 Since we’ll be using Next.js, most of our pages will be in a folder that Next.js built called Pages. Any endpoints that we need will be in its own separate folder called the ‘services’. The actions that are required to do will be stored in a folder called ‘actions’. Any logic that needs to be done with the data and changes the state (decided by actions) will also be in its own folder called ‘reducers’. 
 As for the backend, each separate Model will have its own folder with an overarching server.js to start and connect with our database.
@@ -88,6 +89,7 @@ List each team member and:
 We will conduct meetings on Thursday 12 AM Eastern Time every week on Zoom since group members are currently residing in different countries. During these weekly meetings, we will reflect on our progress for the past week by reviewing the goals we have set in the previous meeting. Any members who are encountering problems in their respective share of work can discuss with the group while the team troubleshoots collectively. Furthermore, the members will set out goals for the next week using Trello, our progress management tool of choice. Lastly, we will prepare the necessary information for the meeting with our partner, including the progress report or issues that that requires their opinion. Aside from the team gathering, members who are responsible for the same or related components of the application will organize coding sessions at their own convenience. Such sessions can dramatically boost our efficiency and ensure the team gathering is focused on issues that involve the entire group. 
 
 In the first meeting with our partner, we began with self-introductions for each of the members and also got to know our partner better. Every member highlighted their technical strengths and experiences with the partner. Moreover, the partner clarified his vision of the product and some expectation details which allowed for planning of different components of the application. For example, the project partner worked through many persona and user stories of our software. 
+
 The second meeting was much more focused on resolving practicability issues with our original proposal. To illustrate, the goal of our product is to automate the inventory management process as much as possible. However, local merchants may deploy a variety of point-of-sale systems and implementing a solution for all of these options is not feasible for our time frame and small team. Furthermore, the project partner reviewed our low-fidelity prototypes and gave many constructive criticisms for us to continue building our prototype. As a result of these meetings, we were more certain of the expectation for our product and the possible use cases. 
 
 The meetings with project partner will repeatedly take place on Friday 11 AM eastern time. 
@@ -98,16 +100,21 @@ The meetings with project partner will repeatedly take place on Friday 11 AM eas
 #### Q8: What artifacts will you use to self-organize?
 
 We’ll be using Trello as our main to do list. And we’ll be using Slack as our main communication form especially with our partner. Advanced meeting invitations will also be sent out through Google Calendar. 
+
 In Trello, we have set up a ToDo list for all tickets that still haven’t been picked up by anyone to do. There is also a Doing list for tickets that are in the process of being completed. A Test and Review for tickets that are done but still need to be reviewed and tested by somebody else. A Done list for all tickets that are completed. Lastly, there will be a Priority list where we will put any component that we need to rush out, or any major bugs that need to be fixed. We will aim to assign all tickets in the Priority list before assigning items in the ToDo list. Additionally, for each ticket we can attach members to it which will indicate who is in charge of completing the ticket, we will decide the member based on their strength and/or workload. There is also the option of attaching a due date for each ticket, allowing us to estimate how long it’ll take us to finish and allow us to modify our schedule if need be. 
+
 Any ticket will go through the life cycle of starting from the ToDo or Priority lists, and will be picked up by a member and moved to do the Doing list. When completed they will move it to the Test and Review list and wait for someone to review it. After all corrections, if any, are made, it will then be moved into the Done list. 
 
 #### Q9: What are the rules regarding how your team works?
 
 We will use slack as our day-to-day collaboration platform. Our partner is also in the same slack channel and we will communicate our progress routinely with the partner. The team members are located in different time zones, hence Slack would be a good tool for issues and responses (asynchronous). For synchronous meetings, we have set  a meeting with our partner every Friday at 11AM. For ourselves, we have decided to meet every Thursday at midnight. All other meetings will be decided as a group, when a meeting is scheduled, all members are expected to attend. 
+
 Scenario 1: A team member does not respond to messages
 We would assume this member is asleep due to time difference and wait for their response on Slack or WeChat. If we waited for longer than what we could reasonably expect, we should call this member to find out why.
+
 Scenario 2: A team member complaints too much work assigned, or being busy on other course work.
 We would re-weight the work to future jobs so that the workload is shared fairly.
+
 Scenario 3: Team members have a major disagreement on a project decision.
 We would vote on the options we have and choose the one that is commonly agreed.
 
