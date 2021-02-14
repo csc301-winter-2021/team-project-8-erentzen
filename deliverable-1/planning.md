@@ -1,68 +1,73 @@
-# YOUR PRODUCT/TEAM NAME
-> _Note:_ This document is meant to evolve throughout the planning phase of your project.   That is, it makes sense for you commit regularly to this file while working on the project (especially edits/additions/deletions to the _Highlights_ section). Most importantly, it is a reflection of all the planning you work you've done in the first iteration. 
- > **This document will serve as a master plan between your team, your partner and your TA.**
+# ERENTZEN/MEOW
 
 ## Product Details
  
 #### Q1: What are you planning to build?
 
- > Short (1 - 2 min' read)
- * Start with a single sentence, high-level description of the product.
- * Be clear - Describe the problem you are solving in simple terms.
- * Be concrete. For example:
-    * What are you planning to build? Is it a website, mobile app,
-   browser extension, command-line app, etc.?      
-    * When describing the problem/need, give concrete examples of common use cases.
-    * Assume your the reader knows nothing about the problem domain and provide the necessary context. 
- * Focus on *what* your product does, and avoid discussing *how* you're going to implement it.      
-   For example: This is not the time or the place to talk about which programming language and/or framework you are planning to use.
- * **Feel free (and very much encouraged) to include useful diagrams, mock-ups and/or links**.
+We are planning to build a client that can be deployed in-house by small retailers that will update inventory in real time for Shopify. Our web application will be embedded within Shopify. Many small retailers have their own online store on platforms like shopify. They often encounter inventory management synchronization issues. For example, a customer looked up inventory on the retailer website, went to the store in person but the product was in fact out of stock. Our product will both accept inventory updates from the online store and push updates to the store. 
 
 
 #### Q2: Who are your target users?
 
-  > Short (1 - 2 min' read max)
- * Be specific (e.g. a 'a third-year university student studying Computer Science' and not 'a student')
- * **Feel free to use personas. You can create your personas as part of this Markdown file, or add a link to an external site (for example, [Xtensio](https://xtensio.com/user-persona/)).**
+Personas:
+- Fred is so frustrated with his Shopify store. Recently, he opened a small local store in the town.  It is nice to make more sales locally, however, the complaints from his online customers make things difficult.  Many online customers make an order of a product, but that product they order is actually out of stock since Fred has sold it in the new local store. 
+- Lucas is 34 and owns a local retail store that sells electronic products, but never had experience operating an online store. Due to the covid, there is barely a customer in his local store, so he is willing to start an online store on Shopify. He is tech-savvy and wants to set up an organized system to keep track of his inventory. 
+- Tracy is a merchant currently working on both online and local shops. She is using a web app provided on Shopify for managing her inventory. But, the monthly fee of the app is way too high compared to her revenue. She is thinking of changing to a different app with a similar feature to do the inventory managing, but with a lower fee. She is not very good at learning new technology, so she hopes the transform between apps could be convenient. 
+
 
 #### Q3: Why would your users choose your product? What are they using today to solve their problem/need?
 
-> Short (1 - 2 min' read max)
- * We want you to "connect the dots" for us - Why does your product (as described in your answer to Q1) fits the needs of your users (as described in your answer to Q2)?
- * Explain the benefits of your product explicitly & clearly. For example:
-    * Save users time (how much?)
-    * Allow users to discover new information (which information? And, why couldn't they discover it before?)
-    * Provide users with more accurate and/or informative data (what kind of data? Why is it useful to them?)
-    * Does this application exist in another form? If so, how does your differ and provide value to the users?
-    * How does this align with your partner's organization's values/mission/mandate?
+   Our inventory management application will allow local merchants to automatically synchronize their stock levels across their brick-and-mortar store and their ecommerce site and save the time of performing such tasks manually. Users will be able to efficiently examine their inventory and will not have to manually update stock levels. This will prevent the possibility of overselling products with not enough stock. Hence, the chance of losing customers who ordered on site or looked up the inventory on company website but can’t purchase the product in store will be dramatically reduced. Our system will be easy to operate even for non tech-savvy users. Although such services are already available, unlike them our service will come free of charge in order to help local small businesses lessen their burden during this harsh pandemic. Furthermore, our application is only responsible for inventory management and will not lock users into our ecosystem by forcing multiple services on their entire sales operation.
 
 #### Q4: How will you build it?
 
-> Short (1-2 min' read max)
- * What is the technology stack? Specify any and all languages, frameworks, libraries, PaaS products or tools. 
- * How will you deploy the application?
- * Describe the architecture - what are the high level components or patterns you will use? Diagrams are useful here. 
- * Will you be using third party applications or APIs? If so, what are they?
- * What is your testing strategy?
+The tech stack that we’ll be using will consist of React frontend and Node backend. We’ll be using mySQL as our database to store all our information as well. We’ll also be using Next.js framework to set everything up and will be using GraphQL to interact with the Shopify API that we’ll be heavily using. Deployment will be done through Heroku, and testing will be done through Mocha, which has both backend and frontend testing functionality. Additionally, we also have access to an actual store through Shopify and further development/staging testing can be done there. 
+As for a high level overview, we will be separating frontend and backend. 
+Since we’ll be using Next.js, most of our pages will be in a folder that Next.js built called Pages. Any endpoints that we need will be in its own separate folder called the ‘services’. The actions that are required to do will be stored in a folder called ‘actions’. Any logic that needs to be done with the data and changes the state (decided by actions) will also be in its own folder called ‘reducers’. 
+As for the backend, each separate Model will have its own folder with an overarching server.js to start and connect with our database.
+
+The components we require for now are:
+- manual change inventory -- where the user can add or delete products
+- parse csv inventory -- parse the users inventory and store in our database
+- automatic update through shopify when purchasing -- automatically update our database to reflect transaction done through shopify
+- display inventory -- allow user to check their stock level
+- pending transactions -- keep track of who may be in the midst of purchasing to avoid conflict with multiple transactions
+- notify when low on a product after a certain threshold
+- add/delete items to inventory -- where the user can delete or add stock
+
+![alt text](https://github.com/csc301-winter-2021/team-project-8-erentzen/blob/main/diagrams.png?raw=true)
 
 #### Q5: What are the user stories that make up the MVP?
 
- * At least 5 user stories concerning the main features of the application - note that this can broken down further
- * You must follow proper user story format (as taught in lecture) ```As a <user of the app>, I want to <do something in the app> in order to <accomplish some goal>```
- * User stories must contain acceptance criteria. Examples of user stories with different formats can be found here: https://www.justinmind.com/blog/user-story-examples/. **It is important that you provide a link to an artifact containing your user stories**.
- * If you have a partner, these must be reviewed and accepted by them
+1. Retailer keeps inventory using a spreadsheet and does not have an inventory management solution in place.
+
+As a complete new retailer with no technical background, I want to create  and configure my e-commerce store without knowing any technical detail in the solution.(easy to operate)
+
+Acceptance criteria:  Given that the new retailer wants to create an e-commerce store without learning the technical knowledge, when the retailer logs in to the account then can he/she update the inventory history by uploading the sales spreadsheet or integrating with the POS system.
+
+2. Retailer has an inventory management system that is not integrated with their POS system.
+As an e-commerse retailer, I want to automatically and timely update my inventory and POS system in order to efficiently track and restore the stock.
+
+Acceptance criteria: Given that the retailer wants to update the inventory automatically and timely, when he/she integrates the management system with the POS system then the inventory can be updated once a purchase is done on the POS system.
+
+3. As an e-commerse retailer, I want to automatically synchronize the stock levels across multiple POS systems in order to support my business on different platforms.(synchronize multi platform)
+
+Acceptance criteria: Given the retailer wants to synchronize the inventory across different POS systems, when he/she integrates the management system with multiple POS systems supported by the software then the inventory can be updated once a purchase is done on any of the POS systems.
+
+Retailer has a fully integrated inventory management solution including POS.
+ 
+4. As a retailer having experience in multiple inventory management solution platforms, I want a free application on SaaS solutions in order to lessen my burden running the business. (free of charge)
+
+Acceptance criteria: Given the retailer wants to lessen the budget spending on the inventory management system, when he signs up for an account on this application then he can come free of charge to access any functions provided.
+
+5. As a retailer having experience in multiple inventory management solution platforms, I want to use a flexible inventory management solution that can accommodate with other services so that I can customize the ecosystem that is best for my business.  (flexible)
+
+Acceptance criteria: Given the retailer doesn’t want to be locked into an ecosystem, when he uses the application then will we only be responsible for the inventory management and we will not force the users to use any other services.
 
 ----
 ## Intellectual Property Confidentiality Agreement 
-> Note this section is **not marked** but must be completed briefly if you have a partner. If you have any questions, please contact David and Adam.
->  
-**By default, you own any work that you do as part of your coursework.** However, some partners may want you to keep the project confidential after the course is complete. As part of your first deliverable, you should discuss and agree upon an option with your partner. Examples include:
-1. You can share the software and the code freely with anyone with or without a license, regardless of domain, for any use.
-2. You can upload the code to GitHub or other similar publicly available domains.
-3. You will only share the code under an open-source license with the partner but agree to not distribute it in any way to any other entity or individual. 
-4. You will share the code under an open-source license and distribute it as you wish but only the partner can access the system deployed during the course.
 
-**Briefly describe which option you have agreed to. Your partner cannot ask you to sign any legally binding agreements or documents pertaining to non-disclosure, confidentiality, IP ownership, etc.**
+Our partner has agreed to make the product open-source under the MIT license.
 
 ----
 
@@ -79,43 +84,31 @@ List each team member and:
 
 #### Q7: What operational events will you have as a team?
 
-Describe meetings (and other events) you are planning to have. 
- * When and where? Recurring or ad hoc? In-person or online?
- * What's the purpose of each meeting?
- * Other events could be coding sessions, code reviews, quick weekly sync meeting online, etc.
- * You must have at least 2 meetings with your project partner (if you have one) before D1 is due. Describe them here:
-   * What did you discuss during the meetings?
-   * What were the outcomes of each meeting?
-   * You must provide meeting minutes.
-   * You must have a regular meeting schedule established by the second meeting.  
+We will conduct meetings on Thursday 12 AM Eastern Time every week on Zoom since group members are currently residing in different countries. During these weekly meetings, we will reflect on our progress for the past week by reviewing the goals we have set in the previous meeting. Any members who are encountering problems in their respective share of work can discuss with the group while the team troubleshoots collectively. Furthermore, the members will set out goals for the next week using Trello, our progress management tool of choice. Lastly, we will prepare the necessary information for the meeting with our partner, including the progress report or issues that that requires their opinion. Aside from the team gathering, members who are responsible for the same or related components of the application will organize coding sessions at their own convenience. Such sessions can dramatically boost our efficiency and ensure the team gathering is focused on issues that involve the entire group. 
+
+In the first meeting with our partner, we began with self-introductions for each of the members and also got to know our partner better. Every member highlighted their technical strengths and experiences with the partner. Moreover, the partner clarified his vision of the product and some expectation details which allowed for planning of different components of the application. For example, the project partner worked through many persona and user stories of our software. 
+The second meeting was much more focused on resolving practicability issues with our original proposal. To illustrate, the goal of our product is to automate the inventory management process as much as possible. However, local merchants may deploy a variety of point-of-sale systems and implementing a solution for all of these options is not feasible for our time frame and small team. Furthermore, the project partner reviewed our low-fidelity prototypes and gave many constructive criticisms for us to continue building our prototype. As a result of these meetings, we were more certain of the expectation for our product and the possible use cases. 
+
+The meetings with project partner will repeatedly take place on Friday 11 AM eastern time. 
+
+*meeting minutes added to repo*
+
   
 #### Q8: What artifacts will you use to self-organize?
 
-List/describe the artifacts you will produce in order to organize your team.       
-
- * Artifacts can be To-Do lists, Task boards, schedule(s), meeting minutes, etc.
- * We want to understand:
-   * How do you keep track of what needs to get done?
-   * **How do you prioritize tasks?**
-   * How do tasks get assigned to team members?
-   * How do you determine the status of work from inception to completion?
+We’ll be using Trello as our main to do list. And we’ll be using Slack as our main communication form especially with our partner. Advanced meeting invitations will also be sent out through Google Calendar. 
+In Trello, we have set up a ToDo list for all tickets that still haven’t been picked up by anyone to do. There is also a Doing list for tickets that are in the process of being completed. A Test and Review for tickets that are done but still need to be reviewed and tested by somebody else. A Done list for all tickets that are completed. Lastly, there will be a Priority list where we will put any component that we need to rush out, or any major bugs that need to be fixed. We will aim to assign all tickets in the Priority list before assigning items in the ToDo list. Additionally, for each ticket we can attach members to it which will indicate who is in charge of completing the ticket, we will decide the member based on their strength and/or workload. There is also the option of attaching a due date for each ticket, allowing us to estimate how long it’ll take us to finish and allow us to modify our schedule if need be. 
+Any ticket will go through the life cycle of starting from the ToDo or Priority lists, and will be picked up by a member and moved to do the Doing list. When completed they will move it to the Test and Review list and wait for someone to review it. After all corrections, if any, are made, it will then be moved into the Done list. 
 
 #### Q9: What are the rules regarding how your team works?
 
-Describe your team's working culture.
-
-**Communications:**
- * What is the expected frequency? What methods/channels are appropriate? 
- * If you have a partner project, what is your process (in detail) for communicating with your partner?
- 
-**Meetings:**
- * How are people held accountable for attending meetings, completing action items? Is there a moderator or process?
- 
-**Conflict Resolution:**
- * List at least three team scenarios/conflicts you discussed in lecture and how you decided you will resolve them. Indecisions? Non-responsive team members? Any other scenarios you can think of?
-
-
-
+We will use slack as our day-to-day collaboration platform. Our partner is also in the same slack channel and we will communicate our progress routinely with the partner. The team members are located in different time zones, hence Slack would be a good tool for issues and responses (asynchronous). For synchronous meetings, we have set  a meeting with our partner every Friday at 11AM. For ourselves, we have decided to meet every Thursday at midnight. All other meetings will be decided as a group, when a meeting is scheduled, all members are expected to attend. 
+Scenario 1: A team member does not respond to messages
+We would assume this member is asleep due to time difference and wait for their response on Slack or WeChat. If we waited for longer than what we could reasonably expect, we should call this member to find out why.
+Scenario 2: A team member complaints too much work assigned, or being busy on other course work.
+We would re-weight the work to future jobs so that the workload is shared fairly.
+Scenario 3: Team members have a major disagreement on a project decision.
+We would vote on the options we have and choose the one that is commonly agreed.
 
 ----
 ## Highlights
