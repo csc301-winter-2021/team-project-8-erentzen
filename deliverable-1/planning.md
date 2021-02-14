@@ -36,7 +36,7 @@ The components we require for now are:
 - notify when low on a product after a certain threshold
 - add/delete items to inventory -- where the user can delete or add stock
 
-![alt text](https://github.com/csc301-winter-2021/team-project-8-erentzen/blob/main/diagrams.png?raw=true)
+![alt text](https://github.com/csc301-winter-2021/team-project-8-erentzen/blob/main/deliverable-1/diagrams.png)
 
 #### Q5: What are the user stories that make up the MVP?
 
