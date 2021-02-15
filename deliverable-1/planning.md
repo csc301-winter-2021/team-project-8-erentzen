@@ -84,49 +84,50 @@ List each team member and:
  * A description of their role(s) and responsibilities including the components they'll work on and non-software related work
  * 3 technical strengths and weaknesses each (e.g. languages, frameworks, libraries, development methodologies, etc.)
  
- **Shirley**  - Project Management: Communicating and Organizing
+ **Shirley**  - Back End, Project Management: Communicating and Organizing
 + Web Dev Experience with Node/React
 + UI/UX Design
 + Agile
 - No Shopify API Experience
 - No GraphQL Experience
 
-**Peiwen**  - Prototyping
+**Peiwen**  - Prototyping, Front End, UI/UX Design
 + UI/UX Design
 + Web Dev Experience with Node/React
 + Prototype
 - No Shopify API Experience
 - No GraphQL Experience
 
-**Frank** 
+**Frank** - Back End
 + Node/React/Vue
 + Android
 + postgresQL/MongoDB
 - No Shopify API Experience
 - No GraphQL Experience
 
-**Leishi** 
+**Leishi** - Front End, UI/UX Design
 + Node/React
 + postgresQL/MongoDB
 + UI/UX Design
 - No Shopify API Experience
 - No GraphQL Experience
-- unfamiliar iar with testing environments
+- Limited Testing Experience
 
-**Ziang** 
+**Ziang** - Front End
 + postgresQL/MongoDB
 + Node/React
 + Mobile
 - No Shopify API Experience
 - No GraphQL Experience
-- Unfamiliar with testing environments
+- Unfamiliar with Testing Environments
 
-**Zimo** 
+**Zimo** - Back End
 + Cloud Platform
 + Node/React
 + Mobile
 - No Shopify API Experience
 - No GraphQL Experience
+- Limited DevOps Experience
 
 #### Q7: What operational events will you have as a team?
 
