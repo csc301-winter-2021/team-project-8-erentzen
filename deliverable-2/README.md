@@ -1,0 +1,2 @@
+APP ID = '9ed99941896e2cb6a98ffca8372e624a'
+APP SECRET = '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'
