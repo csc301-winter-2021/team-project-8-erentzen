@@ -1,5 +1,5 @@
 import React, { useState , useCallback }from 'react';
-import { Layout, Page, Tabs, Card, DataTable, TextStyle } from '@shopify/polaris';
+import { Layout, Page, Tabs, Card, DataTable, TextStyle, Button } from '@shopify/polaris';
 
 class Inventory extends React.Component {
   state = {};
@@ -40,6 +40,7 @@ function Table(props) {
       break;
     case 2: // Pending transaction
       filteredRows = initiallySortedRows.filter(row => row[4] != 0);
+      break;
     default:
       filteredRows = initiallySortedRows;
   }
@@ -57,32 +58,58 @@ function Table(props) {
       return direction === 'descending' ? -result : result;
     });
   }
+  
+  function downloadCSV() {
+    let csvContent = "data:text/csv;charset=utf-8,";
+    for (let i = 0; i < rows.length; i++) {
+      let value = rows[i];
+      for (let j = 0; j < value.length; j++) {
+          let innerValue =  value[j]===null?'':value[j].toString();
+          let result = innerValue.replace(/"/g, '""');
+          if (result.search(/("|,|\n)/g) >= 0)
+              result = '"' + result + '"';
+          if (j > 0)
+              csvContent += ',';
+          csvContent += result;
+      }
+      csvContent += '\n';
+    }  
+    let encodedUri = encodeURI(csvContent);
+    window.open(encodedUri);
+  }
 
   return (
-    <Card>
-      <DataTable
-        columnContentTypes={[
-          'numeric',
-          'text',
-          'text',
-          'numeric',
-          'numeric',
-          'numeric'
-        ]}
-        headings={[
-          'ID',
-          'Product',
-          'Variant',
-          'Stock',
-          'Pending',
-          'Price'
-        ]}
-        rows={rows}
-        sortable={[true, true, true, true, true, true]}
-        defaultSortDirection="descending"
-        onSort={handleSort}
-      />
-    </Card>
+    <Layout>
+      <Layout.Section>
+        <Card>
+          <DataTable
+            columnContentTypes={[
+              'numeric',
+              'text',
+              'text',
+              'numeric',
+              'numeric',
+              'numeric'
+            ]}
+            headings={[
+              'ID',
+              'Product',
+              'Variant',
+              'Stock',
+              'Pending',
+              'Price'
+            ]}
+            rows={rows}
+            sortable={[true, true, true, true, true, true]}
+            defaultSortDirection="descending"
+            onSort={handleSort}
+          />
+        </Card>
+      </Layout.Section>
+      <Layout.Section>
+        <Button plain onClick={downloadCSV}>Download CSV</Button>
+      </Layout.Section>
+    </Layout>
   );
 }
 
