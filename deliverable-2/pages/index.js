@@ -4,7 +4,7 @@ const Index = () => (
     <Page>
       <Layout>
         <TextStyle variation="positive">
-          Sample app using React and Next.js
+          Sample app using React and Next.js. HI!
         </TextStyle>
       </Layout>
     </Page>
