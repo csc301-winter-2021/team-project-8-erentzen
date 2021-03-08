@@ -1,5 +1,4 @@
 node_modules
 .next
-.env
 npm-debug.log
 package-lock.json
