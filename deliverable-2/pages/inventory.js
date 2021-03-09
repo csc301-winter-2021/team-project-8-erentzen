@@ -1,5 +1,6 @@
 import React, { useState , useCallback }from 'react';
-import { Layout, Page, Tabs, Card, DataTable, TextStyle, Button } from '@shopify/polaris';
+import { Layout, Page, Tabs, Card, DataTable, Button, TextField, Icon } from '@shopify/polaris';
+import {SearchMinor} from '@shopify/polaris-icons';
 
 class Inventory extends React.Component {
   state = {};
@@ -32,6 +33,7 @@ function Table(props) {
   ]
 
   let filteredRows = [];
+  let searchKeyword = ""
 
   switch (props.selected) {
     case 1: // Low stock
@@ -45,6 +47,15 @@ function Table(props) {
       filteredRows = initiallySortedRows;
   }
 
+  const searchRows = (rows, keyword) => {
+    return rows.filter(row => 
+      row[1].toString().toLowerCase().includes(keyword.toLowerCase()));
+  }
+  
+  const handleChange = useCallback((newValue) => {
+    setSortedRows(searchRows(rows, newValue.toString()));
+  }, [rows]);
+
   const rows = sortedRows ? sortedRows : filteredRows;
   ;
   const handleSort = useCallback(
@@ -52,14 +63,14 @@ function Table(props) {
     [rows],
   );
 
-  function sortRows(rows, index, direction) {
+  const sortRows = (rows, index, direction) => {
     return [...rows].sort((rowA, rowB) => {
       const result = rowA[index] > rowB[index] ? 1 : -1;
       return direction === 'descending' ? -result : result;
     });
   }
   
-  function downloadCSV() {
+  const downloadCSV = () => {
     let csvContent = "data:text/csv;charset=utf-8,";
     for (let i = 0; i < rows.length; i++) {
       let value = rows[i];
@@ -81,30 +92,31 @@ function Table(props) {
   return (
     <Layout>
       <Layout.Section>
-        <Card>
-          <DataTable
-            columnContentTypes={[
-              'numeric',
-              'text',
-              'text',
-              'numeric',
-              'numeric',
-              'numeric'
-            ]}
-            headings={[
-              'ID',
-              'Product',
-              'Variant',
-              'Stock',
-              'Pending',
-              'Price'
-            ]}
-            rows={rows}
-            sortable={[true, true, true, true, true, true]}
-            defaultSortDirection="descending"
-            onSort={handleSort}
-          />
-        </Card>
+        <SearchBar onChange={handleChange}></SearchBar>
+      </Layout.Section>
+      <Layout.Section>
+        <DataTable
+          columnContentTypes={[
+            'numeric',
+            'text',
+            'text',
+            'numeric',
+            'numeric',
+            'numeric'
+          ]}
+          headings={[
+            'ID',
+            'Product',
+            'Variant',
+            'Stock',
+            'Pending',
+            'Price'
+          ]}
+          rows={rows}
+          sortable={[true, true, true, true, true, true]}
+          defaultSortDirection="descending"
+          onSort={handleSort}
+        />
       </Layout.Section>
       <Layout.Section>
         <Button plain onClick={downloadCSV}>Download CSV</Button>
@@ -113,7 +125,22 @@ function Table(props) {
   );
 }
 
-
+function SearchBar(props) {
+  const [value, setValue] = useState('');
+  const handleChange = useCallback((newValue) => {
+    setValue(newValue);
+    props.onChange(newValue);
+  }, []);
+  return (
+    <TextField 
+      id="search-bar"
+      value={value}
+      prefix={<Icon source={SearchMinor} color="base" />}
+      placeholder="Search products"
+      onChange={handleChange}
+    />
+  );
+}
 
 // Tabs for identifying status of products
 function StockTabs() {
@@ -144,9 +171,13 @@ function StockTabs() {
   ];
 
   return (
-    <Tabs tabs={tabs} selected={selected} onSelect={handleTabChange}>
-      <Table selected={selected}></Table>
-    </Tabs>
+    <Card>
+      <Tabs tabs={tabs} selected={selected} onSelect={handleTabChange} fitted>
+        <Card.Section>
+          <Table selected={selected}></Table>
+        </Card.Section>
+      </Tabs>
+    </Card>
   );
 }
 
