@@ -54,7 +54,7 @@ function Table(props) {
   
   const handleChange = useCallback((newValue) => {
     setSortedRows(searchRows(rows, newValue.toString()));
-  }, [rows]);
+  }, []);
 
   const rows = sortedRows ? sortedRows : filteredRows;
   ;
