@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import Chart from "chart.js";
 import {Line, Pie} from 'react-chartjs-2';
 
-import {Card, Layout, AppProvider, DataTable} from '@shopify/polaris';
+import {Card, Layout, Page, AppProvider, DataTable} from '@shopify/polaris';
 
 // import './Dashboard.css';
 
@@ -31,7 +31,8 @@ class Dashboard extends Component{
     }
     render(){
         return(
-            <AppProvider>
+            // <AppProvider>
+            <Page>
                 <Layout>
                     <Layout.Section>
                         <Card title="Low Stock" sectioned>
@@ -85,7 +86,8 @@ class Dashboard extends Component{
                         </Card>
                     </Layout.Section>
                 </Layout>
-            </AppProvider>
+                </Page>
+            // </AppProvider>
             
         )
     }
