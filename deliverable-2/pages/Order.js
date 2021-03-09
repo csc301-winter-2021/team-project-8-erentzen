@@ -80,7 +80,7 @@ export default class Order extends React.Component {
 
 
     render() {
-        return (
+        return ( 
             <Page title="Inventory Update">
                 <Button onClick={this.Load}>+CSV</Button>
                 <form>
