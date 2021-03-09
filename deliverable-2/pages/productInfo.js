@@ -24,7 +24,7 @@ class productInfo extends React.Component {
             name: '',
             picture: '',
             description: '',
-            history = [],
+            history: [],
 
         }
     }
