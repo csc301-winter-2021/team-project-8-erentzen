@@ -7,6 +7,14 @@ const sampleRows = [
     [2, 'UofT Hoodie', 'White, L', 2, 0, 59.99, 5],
 ]; 
 
+const sampleList = {
+    'i1': ['UofT Hoodie', 'White, S', 1, 0, 59.99],
+    'i2': ['UofT Hoodie', 'White, L', 2, 0, 59.99],
+    'i3': ['UofT Hat', '/', 15, 1, 32.99],
+    
+}
+
+
 export default class Order extends React.Component {
     constructor(props) {
         super(props);
@@ -80,14 +88,19 @@ export default class Order extends React.Component {
 
 
     render() {
-        return ( 
+        return (
             <Page title="Inventory Update">
-                <Button onClick={this.Load}>+CSV</Button>
-                <form>
+                
+                <Form>
                     <input type='text' name='pID' placeholder='product id' value={this.state.pID} onChange={this.handlePidChange} />
                     <input type='number' name='amount' placeholder='product amount' value={this.state.amount} onChange={this.handleAmountChange} />
-                    <button type="button" onClick={() => this.addProduct([[this.state.pID, '', '', 1, 1, 10, parseInt(this.state.amount)]])}>Add</button>
-                </form>
+                    
+                    <Button type="button" onClick={() => this.addProduct([[this.state.pID, sampleList['i'+this.state.pID][0], 
+                        sampleList['i'+this.state.pID][1], sampleList['i'+this.state.pID][2], sampleList['i'+this.state.pID][3], 
+                        sampleList['i'+this.state.pID][4], parseInt(this.state.amount)]])}>Add</Button>
+                    <Button plain onClick={this.Load}>+CSV</Button>
+                </Form>
+                
 
                 <Card>
                     <DataTable
@@ -115,6 +128,7 @@ export default class Order extends React.Component {
                 />
                 </Card>
                 <Button onClick={this.confirm}>Confirm</Button>
+                
             </Page>
           );
     }
