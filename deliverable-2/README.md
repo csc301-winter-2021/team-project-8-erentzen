@@ -37,11 +37,11 @@ This application is aimed to be an Spotify App, therefore it would be linked to 
 
 The user is first shown with the dashboard, which shows a brief peek of the state of the inventory.
 
-Through the navigation bar, user can navigate between the Dashboard, Inventory or Inventory Update pages.
+Through the navigation bar, user can navigate between the Dashboard, Inventory or Orders*(inventory update)* pages.
 
-In the inventory page, the user can sort the products listing according to stock amount or price etc by clicking on the headers of the column. Products with low stock or products that in the state of a pending transaction are shown in separate tabs. Users can download a spreadsheet of inventory info which they can make changes and re-upload to apply the changes through the upload CSV button.
+In the inventory page, the user can sort the products listing according to stock amount or price etc by clicking on the headers of the column. Products with low stock or products that in the state of a pending transaction are shown in separate tabs. Users can download a spreadsheet of inventory info which they can make changes and re-upload to apply the changes through the inventory update module.
 
-In the inventory update page, the user can upload a CSV file and then update the CSV file through the form atop the table, and then use the confirm button to confirm the changes.
+In the Orders *(inventory update)* page, the user can upload a CSV file and then update the CSV file through the form atop the table, and then use the confirm button to confirm the changes.
 
  
  ## Development requirements
