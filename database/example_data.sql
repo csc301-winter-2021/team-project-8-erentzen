@@ -12,4 +12,4 @@ INSERT INTO variant VALUES (4, 3, 'Black', 27.99, 0);
 INSERT INTO variant VALUES (5, 3, 'White', 27.99, 1);
 
 INSERT INTO item_order VALUES (1, true, 1, 1, '2021-01-01 10:10:10');
-INSERT INTO item_order VALUES (2, true, 3, 2, '2021-01-01 14:14:14')
+INSERT INTO item_order VALUES (2, true, 3, 2, '2021-01-01 14:14:14');
