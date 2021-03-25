@@ -2,7 +2,7 @@ import React, { useState , useCallback }from 'react';
 import { Layout, Page, Tabs, Card, DataTable, Button, TextField, Icon } from '@shopify/polaris';
 import Dashboard from './Dashboard';
 import Order from './Order';
-import Inventory from './inventory';
+import {Inventory} from './inventory';
 // import '@shopify/polaris/styles.css';
 
 export default class NavTabs extends React.Component {

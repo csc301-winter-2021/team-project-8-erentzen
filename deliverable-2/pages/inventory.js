@@ -1,15 +1,30 @@
 import React, { useState , useCallback }from 'react';
 import { Layout, Page, Tabs, Card, DataTable, Button, TextField, Icon } from '@shopify/polaris';
 import {SearchMinor} from '@shopify/polaris-icons';
+import { connect } from 'react-redux';
+import { itemActions } from '../_actions/items.actions';
 
 class Inventory extends React.Component {
   state = {};
+
+  constructor(props) {
+    super(props);
+    this.state = {
+      items: []
+    };
+  }
+
+  componentDidMount() {
+    this.props.fetchAll()
+    this.state.items = this.props.items
+  }
 
   render() {
     return (
       <Page fullWidth>
         <Layout>
-          <StockTabs></StockTabs>
+          {console.log(this.state.items, "state items")}
+          <StockTabs items={this.props.items}></StockTabs>
         </Layout>
       </Page>
     );
@@ -17,23 +32,16 @@ class Inventory extends React.Component {
 }
 
 
-
 // Table for the products
 function Table(props) {
   const [sortedRows, setSortedRows] = useState(null);
   const LOW_STOCK_THRESHOLD = 5;
 
-  // Dummy data
-  const initiallySortedRows = [
-    [1, "UofT hoodie", "White, S", 34, 2, 59.99],
-    [2, "UofT hoodie", "White, L", 52, 1, 59.99],
-    [3, "UofT hat", "Blue", 15, 0, 32.99],
-    [4, "UofT T-Shirt", "Black", 0, 0, 27.99],
-    [5, "UofT T-Shirt", "White", 1, 0, 27.99]
-  ]
-
   let filteredRows = [];
   let searchKeyword = ""
+  console.log(Array.isArray(props.items.items), "in table")
+  const initiallySortedRows = Array.isArray(props.items.items) ? props.items.items : []
+  // const initiallySortedRows = []
 
   switch (props.selected) {
     case 1: // Low stock
@@ -143,9 +151,9 @@ function SearchBar(props) {
 }
 
 // Tabs for identifying status of products
-function StockTabs() {
+function StockTabs(props) {
   const [selected, setSelected] = useState(0);
-
+  console.log(props.items, "stock tab items")
   const handleTabChange = useCallback(
     (selectedTabIndex) => setSelected(selectedTabIndex),
     [],
@@ -174,11 +182,21 @@ function StockTabs() {
     <Card>
       <Tabs tabs={tabs} selected={selected} onSelect={handleTabChange} fitted>
         <Card.Section>
-          <Table selected={selected}></Table>
+          <Table items={props.items} selected={selected}></Table>
         </Card.Section>
       </Tabs>
     </Card>
   );
 }
 
-export default Inventory;
+function mapState(state) {
+  const { items } = state;
+  return { items }
+}
+
+const actionCreators = {
+  fetchAll: itemActions.fetchAll
+}
+
+const connectedInventory = connect(mapState, actionCreators)(Inventory);
+export {connectedInventory as Inventory };
