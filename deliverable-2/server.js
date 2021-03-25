@@ -6,8 +6,9 @@ const { default: createShopifyAuth } = require('@shopify/koa-shopify-auth');
 const { verifyRequest } = require('@shopify/koa-shopify-auth');
 const { default: Shopify, ApiVersion } = require('@shopify/shopify-api');
 const Router = require('koa-router');
-
 dotenv.config();
+
+const itemService = require('./items_backend/items.service');
 
 Shopify.Context.initialize({
     API_KEY: process.env.SHOPIFY_API_KEY,
@@ -49,7 +50,6 @@ app.prepare().then(() => {
 
     router.get("/", async (ctx) => {
         const shop = ctx.query.shop;
-        
         // DO NOT UNCOMMENT OR DELETE
         // if (ACTIVE_SHOPIFY_SHOPS[shop] === undefined) {
         //   ctx.redirect(`/auth?shop=${shop}`);
@@ -57,6 +57,19 @@ app.prepare().then(() => {
           await handleRequest(ctx);
         // }
       });
+
+    router.get('/items', async (ctx) => {
+      items = itemService.getAll()
+      // ctx.res.statusCode = 200;
+      // ctx.body = items;
+        .then(items => ctx.body = (items))
+    
+      // console.log(items)
+
+      // await handleRequest(ctx)
+    })
+
+
   
     router.get("(/_next/static/.*)", handleRequest);
     router.get("/_next/webpack-hmr", handleRequest);
