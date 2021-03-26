@@ -1,7 +1,7 @@
 import React, { useState , useCallback }from 'react';
 import { Layout, Page, Tabs, Card, DataTable, Button, TextField, Icon } from '@shopify/polaris';
 import Dashboard from './Dashboard';
-import Order from './Order';
+import {InventoryUpdate} from './InventoryUpdate';
 import {Inventory} from './inventory';
 // import '@shopify/polaris/styles.css';
 
@@ -28,7 +28,7 @@ function TabsExample() {
         if (selected === 0) {
             return <Dashboard></Dashboard>
         } else if(selected === 2) {
-            return <Order></Order>
+            return <InventoryUpdate></InventoryUpdate>
         } else if (selected === 1) {
             return <Inventory></Inventory>
         }
@@ -46,9 +46,9 @@ function TabsExample() {
         panelID: 'Inventory',
       },
       {
-        id: 'Orders',
-        content: 'Orders',
-        panelID: 'Orders',
+        id: 'InventoryUpdates',
+        content: 'Inventory Updates',
+        panelID: 'InventoryUpdates',
       }
     ];
     return (
