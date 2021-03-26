@@ -6,6 +6,7 @@ const { default: createShopifyAuth } = require('@shopify/koa-shopify-auth');
 const { verifyRequest } = require('@shopify/koa-shopify-auth');
 const { default: Shopify, ApiVersion } = require('@shopify/shopify-api');
 const Router = require('koa-router');
+const mysql = require('mysql2')
 dotenv.config();
 
 const itemService = require('./items_backend/items.service');
@@ -26,6 +27,14 @@ const app = next({ dev });
 const handle = app.getRequestHandler();
 
 const ACTIVE_SHOPIFY_SHOPS = {};
+
+
+// const con = mysql.createConnection({
+//   host: process.env.MYSQL_HOST,
+//   user: process.env.MYSQL_USERNAME,
+//   password: process.env.MYSQL_PASSWORD,
+// });
+
 
 app.prepare().then(() => {
     const server = new Koa();
@@ -59,14 +68,8 @@ app.prepare().then(() => {
       });
 
     router.get('/items', async (ctx) => {
-      items = itemService.getAll()
-      // ctx.res.statusCode = 200;
-      // ctx.body = items;
+      items = await itemService.getAll()
         .then(items => ctx.body = (items))
-    
-      // console.log(items)
-
-      // await handleRequest(ctx)
     })
 
 
