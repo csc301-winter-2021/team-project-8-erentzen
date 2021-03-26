@@ -1,8 +1,10 @@
 import React, {useCallback, useState} from 'react';
-import {Card, DataTable, Page,Button, FormLayout, TextField, Form, Layout, DropZone,Stack, Thumbnail,Caption } from '@shopify/polaris';
+import {Card, DataTable, Page,Button, TextField, Layout, DropZone,Stack, Thumbnail,Caption, Heading} from '@shopify/polaris';
 import { connect } from 'react-redux';
 import { itemActions } from '../_actions/items.actions';
 import {NoteMinor} from '@shopify/polaris-icons';
+
+//var mysql = require('mysql');
 
 class InventoryUpdate extends React.Component {
     state = {};
@@ -12,9 +14,11 @@ class InventoryUpdate extends React.Component {
       this.state = {
         items: [],
         rows: [],
-        updates: {}
+        updates: {},
+        totalCount: 0,
       };
     }
+
   
     componentDidMount() {
       this.props.fetchAll()
@@ -57,6 +61,9 @@ class InventoryUpdate extends React.Component {
         }
         this.setState({updates: newUpdate})
         this.updateRows()
+        let newCount = this.state.totalCount
+        newCount += amount
+        this.setState({totalCount: newCount})
     }
 
     render() {
@@ -64,15 +71,18 @@ class InventoryUpdate extends React.Component {
           <Page fullWidth>
               
                 <Layout>
+                
                     <Layout.Section>
+                        <Heading>Add Entries</Heading>
                         <UpdateForm onClick={this.addProduct}></UpdateForm>
                     </Layout.Section>
 
                     <Layout.Section>
+                        <Heading>Upload File</Heading>
                         <UploadCSV onClick={this.addProduct}>UploadCSV</UploadCSV>
                     </Layout.Section>
 
-                    <Update items={this.state.rows}></Update>
+                    <Update items={this.state.rows} count={this.state.totalCount}></Update>
 
                     <Button fullWidth primary>Confirm</Button>
                 </Layout>
@@ -82,14 +92,13 @@ class InventoryUpdate extends React.Component {
 
 } 
 
-
-
 function Update(props) {
 
     const initiallySortedRows = Array.isArray(props.items) ? props.items : []
 
     return (
-            <Layout.Section>
+        <Layout.Section>
+            <Heading>Cart</Heading>
             <DataTable columnContentTypes={[
                         'numeric',
                         'text',
@@ -109,14 +118,10 @@ function Update(props) {
                         'Modify',
                     ]}
                     rows={initiallySortedRows}
-                    //totals={['', '', '', '', '', '', this.state.total]}
-                    // sortable={[true, true, true, true, true, true]}
-                    // defaultSortDirection="descending"
-                    // onSort={handleSort}
-
-                    // showTotalsInFooter
+                    totals={['', '', '', '', '', '', props.count]}
+                    showTotalsInFooter
                 />
-            </Layout.Section>
+        </Layout.Section>
     );
 
 } 
@@ -171,14 +176,12 @@ function UploadCSV(props) {
 
         reader.onload = function() {
             const lines = reader.result.split('\n');
-            var result = lines.map(function(line) {
+            lines.map(function(line) {
                 var newUpdate = line.split(',');
                 if(newUpdate.length>=7){
-                    props.onClick(newUpdate[0], newUpdate[newUpdate.length - 1]);
-                }
-                
+                    props.onClick(newUpdate[0], parseInt(newUpdate[newUpdate.length - 1]));
+                }    
             });
-          
           
         };
 
@@ -199,7 +202,6 @@ function UploadCSV(props) {
         </div>
     );
 }
-
 
 function mapState(state) {
     const { items } = state;
