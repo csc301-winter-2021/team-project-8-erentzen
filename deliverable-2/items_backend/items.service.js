@@ -2,7 +2,8 @@ const mysql = require('mysql2');
 const con = require('./connection').con
 
 module.exports = {
-    getAll
+    getAll,
+    updateInventory
 }
 
 async function getAll() {
@@ -34,6 +35,11 @@ async function getAll() {
       rows.push(item)
     }
     return rows
+}
+
+async function updateInventory(id, count) {
+  const sql = `update erentzen.variant set stock = ${count} where variant_id = ${id};`
+  await con.promise().query(sql);
 }
 
 // getAll(function(err,data){

@@ -2,7 +2,8 @@ import {itemService} from '../_services';
 import {itemConstants} from '../_constants';
 
 export const itemActions = {
-    fetchAll
+    fetchAll,
+    updateInventory
 };
 
 function fetchAll() {
@@ -17,4 +18,8 @@ function fetchAll() {
     function request() { return { type: itemConstants.FETCH_REQUEST } }
     function success(items) { return { type: itemConstants.FETCH_SUCCESS, items } }
     function failure(error) { return { type: itemConstants.FETCH_FAILURE, error } }
+}
+
+function updateInventory(id, count) {
+    itemService.updateInventory(id, count)
 }

@@ -4,11 +4,10 @@ import { connect } from 'react-redux';
 import { itemActions } from '../_actions/items.actions';
 import {NoteMinor} from '@shopify/polaris-icons';
 
-//var mysql = require('mysql');
-
 class InventoryUpdate extends React.Component {
     state = {};
-
+    
+    
     constructor(props) {
       super(props);
       this.state = {
@@ -19,14 +18,14 @@ class InventoryUpdate extends React.Component {
       };
     }
 
-  
     componentDidMount() {
       this.props.fetchAll()
       this.state.items = this.props.items
     }
 
     getInfo(id) {
-        for(let i = 0; i < this.state.items.items.length; i++){
+        const tmp = Array.isArray(this.state.items.items) ? this.state.items.items : []
+        for(let i = 0; i < tmp.length; i++){
             if(this.state.items.items[i][0] == id){
                 return this.state.items.items[i]
             }
@@ -66,6 +65,16 @@ class InventoryUpdate extends React.Component {
         this.setState({totalCount: newCount})
     }
 
+    handleConfirm= () => {
+        for (var id in this.state.updates){
+            const newCount = this.state.updates[id][6] + this.getInfo(id)[3]
+            itemActions.updateInventory(id, newCount)
+        }
+        this.setState({rows: [], updates: {}, totalCount: 0})
+
+
+    }
+
     render() {
         return (
           <Page fullWidth>
@@ -84,7 +93,7 @@ class InventoryUpdate extends React.Component {
 
                     <Update items={this.state.rows} count={this.state.totalCount}></Update>
 
-                    <Button fullWidth primary>Confirm</Button>
+                    <Button onClick={this.handleConfirm} fullWidth primary>Confirm</Button>
                 </Layout>
           </Page>
         );
@@ -209,7 +218,8 @@ function mapState(state) {
 }
   
 const actionCreators = {
-    fetchAll: itemActions.fetchAll
+    fetchAll: itemActions.fetchAll,
+    updateInventory: itemActions.updateInventory
 }
 
 const connected = connect(mapState, actionCreators)(InventoryUpdate);

@@ -1,7 +1,8 @@
 // import config from 'config'
 
 export const itemService = {
-    fetchAll
+    fetchAll,
+    updateInventory
 };
 
 function fetchAll() {
@@ -9,6 +10,13 @@ function fetchAll() {
         method : 'GET',
     };
     return fetch(`http://localhost:3000/items/`, requestOptions).then(handleResponse)
+ }
+
+function updateInventory(id, count) {
+    const requestOptions = {
+        method : 'GET',
+    };
+    return fetch(`http://localhost:3000/update/${id}/${count}`, requestOptions)
  }
 
  function handleResponse(response) {

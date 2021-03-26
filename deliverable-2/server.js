@@ -72,6 +72,10 @@ app.prepare().then(() => {
         .then(items => ctx.body = (items))
     })
 
+    router.get('/update/:id/:count', async (ctx) => {
+      await itemService.updateInventory(ctx.params.id,ctx.params.count) 
+    })
+
 
   
     router.get("(/_next/static/.*)", handleRequest);
