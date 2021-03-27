@@ -22,7 +22,8 @@ USE erentzen;
 
 CREATE TABLE store(
     store_id INT PRIMARY KEY,
-    store_name VARCHAR(50) NOT NULL
+    store_name VARCHAR(50) NOT NULL,
+    oauth_code VARCHAR(100)
 );
 
 CREATE TABLE item(
