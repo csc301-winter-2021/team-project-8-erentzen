@@ -1,5 +1,5 @@
 import React, {useCallback, useState} from 'react';
-import {Card, DataTable, Page,Button, TextField, Layout, DropZone,Stack, Thumbnail,Caption, Heading} from '@shopify/polaris';
+import {Card, DataTable, Page,Button, TextField, Layout, DropZone,Stack, Thumbnail,Caption, Heading, FormLayout} from '@shopify/polaris';
 import { connect } from 'react-redux';
 import { itemActions } from '../_actions/items.actions';
 import {NoteMinor} from '@shopify/polaris-icons';
@@ -7,11 +7,9 @@ import {NoteMinor} from '@shopify/polaris-icons';
 class InventoryUpdate extends React.Component {
     state = {};
     
-    
     constructor(props) {
       super(props);
       this.state = {
-        items: [],
         rows: [],
         updates: {},
         totalCount: 0,
@@ -19,15 +17,14 @@ class InventoryUpdate extends React.Component {
     }
 
     componentDidMount() {
-      this.props.fetchAll()
-      this.state.items = this.props.items
+        this.props.fetchAll()
     }
 
     getInfo(id) {
-        const tmp = Array.isArray(this.state.items.items) ? this.state.items.items : []
+        const tmp = Array.isArray(this.props.items.items) ? this.props.items.items : []
         for(let i = 0; i < tmp.length; i++){
-            if(this.state.items.items[i][0] == id){
-                return this.state.items.items[i]
+            if(this.props.items.items[i][0] == id){
+                return this.props.items.items[i]
             }
         }
         return null
@@ -70,9 +67,11 @@ class InventoryUpdate extends React.Component {
             const newCount = this.state.updates[id][6] + this.getInfo(id)[3]
             itemActions.updateInventory(id, newCount)
         }
+        this.clear()
+    }
+
+    clear = () => {
         this.setState({rows: [], updates: {}, totalCount: 0})
-
-
     }
 
     render() {
@@ -80,20 +79,23 @@ class InventoryUpdate extends React.Component {
           <Page fullWidth>
               
                 <Layout>
-                
                     <Layout.Section>
-                        <Heading>Add Entries</Heading>
                         <UpdateForm onClick={this.addProduct}></UpdateForm>
                     </Layout.Section>
 
                     <Layout.Section>
-                        <Heading>Upload File</Heading>
                         <UploadCSV onClick={this.addProduct}>UploadCSV</UploadCSV>
                     </Layout.Section>
 
-                    <Update items={this.state.rows} count={this.state.totalCount}></Update>
+                    <Layout.Section>
+                        <Update items={this.state.rows} count={this.state.totalCount}></Update>
+                    </Layout.Section>
 
-                    <Button onClick={this.handleConfirm} fullWidth primary>Confirm</Button>
+                    <Layout.Section>
+                        <Button onClick={this.clear} plain>Clear</Button>
+                        <Button onClick={this.handleConfirm} fullWidth primary>Confirm</Button>
+                    </Layout.Section>
+
                 </Layout>
           </Page>
         );
@@ -106,8 +108,7 @@ function Update(props) {
     const initiallySortedRows = Array.isArray(props.items) ? props.items : []
 
     return (
-        <Layout.Section>
-            <Heading>Cart</Heading>
+        <Card title='Cart'>
             <DataTable columnContentTypes={[
                         'numeric',
                         'text',
@@ -130,7 +131,7 @@ function Update(props) {
                     totals={['', '', '', '', '', '', props.count]}
                     showTotalsInFooter
                 />
-        </Layout.Section>
+        </Card>
     );
 
 } 
@@ -147,10 +148,15 @@ function UpdateForm(props) {
     };
 
     return (
-        <Card>
-            <TextField label={"Product ID"} type={'number'} value={pID} onChange={handleChangeID} />
-            <TextField label={"Amount"} type={'number'} value={value} onChange={handleChangeAmount} />
-            <Button onClick={onClick} fullWidth>Add</Button>
+        <Card title='Add Entries' sectioned>
+            <FormLayout>
+                <TextField label={"Product ID"} type={'number'} value={pID} onChange={handleChangeID} />
+                <TextField label={"Amount"} type={'number'} value={value} onChange={handleChangeAmount} />
+                <Stack distribution="trailing">
+                    <Button onClick={onClick} primary>Add</Button>
+                </Stack>
+            </FormLayout>
+
         </Card>
 
     );
@@ -197,18 +203,23 @@ function UploadCSV(props) {
     };
 
     return (
-        <div>
-            <DropZone 
-                accept=".csv"
-                allowMultiple={false} 
-                onDrop={handleDropZoneDrop}
-                errorOverlayText="File type must be .csv"
-            >
-                {uploadedFile}
-                {fileUpload}
-            </DropZone>
-            <Button onClick={onClick} fullWidth>Upload</Button>
-        </div>
+        <Card title='Upload File' sectioned>
+            <FormLayout >
+                <DropZone 
+                    accept=".csv"
+                    allowMultiple={false} 
+                    onDrop={handleDropZoneDrop}
+                    errorOverlayText="File type must be .csv"
+                >
+                    {uploadedFile}
+                    {fileUpload}
+                </DropZone>
+                <Stack distribution="trailing">
+                    <Button onClick={onClick} primary>Upload</Button>
+                </Stack>
+            </FormLayout>
+            
+        </Card>
     );
 }
 
