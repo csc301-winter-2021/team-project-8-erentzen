@@ -2,6 +2,7 @@ require('isomorphic-fetch');
 const dotenv = require('dotenv');
 const Koa = require('koa');
 const next = require('next');
+const url = require('url')
 const { default: createShopifyAuth } = require('@shopify/koa-shopify-auth');
 const { verifyRequest } = require('@shopify/koa-shopify-auth');
 const { default: Shopify, ApiVersion } = require('@shopify/shopify-api');
@@ -50,6 +51,94 @@ app.prepare().then(() => {
           },
         }),
       );
+
+    router.post("/graphql", verifyRequest(), async (ctx, next) => {
+      await Shopify.Utils.graphqlProxy(ctx.req, ctx.res);
+    });
+
+    router.get("/install.php", async (ctx, next) => {
+      var shop = ctx.query.shop;
+      var appId = process.env.SHOPIFY_API_KEY;
+      var appSecret = process.env.SHOPIFY_API_SECRET;
+      var appScope = process.env.SHOPIFY_API_SCOPES;
+      // var appDomain = process.env.SHOPIFY_APP_URL;
+      var appDomain = 'http://localhost:3000'
+
+      //build the url
+      var installUrl = `https://${shop}/admin/oauth/authorize?client_id=${appId}&scope=${appScope}&redirect_uri=${appDomain}/shopify/auth`;
+
+      //Do I have the token already for this store?
+      //Check database
+      //For tutorial ONLY - check .env variable value
+      // if (process.env.appStoreTokenTest.length > 0) {
+          // res.redirect('/shopify/app?shop=' + shop);
+      // } else {
+          //go here if you don't have the token yet
+          ctx.redirect(installUrl);
+      // }
+      })
+
+    router.get("/shopify/auth", async(ctx) => {
+      console.log("reached auth")
+      let securityPass = false;
+      let appId = process.env.SHOPIFY_APP_URL;
+      let appSecret = process.env.SHOPIFY_API_SECRET;
+      console.log(ctx.url)
+      let shop = ctx.query.shop;
+      let code = ctx.query.code;
+  
+      const regex = /^[a-z\d_.-]+[.]myshopify[.]com$/;
+  
+      if (shop.match(regex)) {
+          console.log('regex is ok');
+          securityPass = true;
+      } else {
+          //exit
+          securityPass = false;
+      }
+  
+      // 1. Parse the string URL to object
+      let urlObj = url.parse(ctx.url);
+      // 2. Get the 'query string' portion
+      let query = urlObj.search.slice(1);
+      securityPass = true;
+      // if (verifyCall.verify(query)) {
+      //     //get token
+      //     console.log('get token');
+      //     securityPass = true;
+      // } else {
+      //     //exit
+      //     securityPass = false;
+      // }
+  
+      if (securityPass && regex) {
+  
+          //Exchange temporary code for a permanent access token
+          let accessTokenRequestUrl = 'https://' + shop + '/admin/oauth/access_token';
+          let accessTokenPayload = {
+              client_id: appId,
+              client_secret: appSecret,
+              code,
+          };
+
+          router.post(accessTokenRequestUrl, async (ctx) => {
+            
+          })
+  
+          router.post(accessTokenRequestUrl, { json: accessTokenPayload })
+              .then((accessTokenResponse) => {
+                  let accessToken = accessTokenResponse.access_token;
+                  console.log('shop token ' + accessToken);
+                  ctx.redirect('/shopify/app?shop=' + shop);
+              })
+              .catch((error) => {
+                  ctx.status(error.statusCode).send(error.error.error_description);
+              });
+      }
+      else {
+          ctx.redirect('/');
+      }
+    });
   
     const handleRequest = async (ctx) => {
       await handle(ctx.req, ctx.res);
