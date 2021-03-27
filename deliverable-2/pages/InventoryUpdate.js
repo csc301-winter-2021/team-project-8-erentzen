@@ -1,5 +1,5 @@
 import React, {useCallback, useState} from 'react';
-import {Card, DataTable, Page,Button, TextField, Layout, DropZone,Stack, Thumbnail,Caption, Heading, FormLayout} from '@shopify/polaris';
+import {Card, DataTable, Page,Button, TextField, Layout, DropZone,Stack, Thumbnail,Caption, FormLayout} from '@shopify/polaris';
 import { connect } from 'react-redux';
 import { itemActions } from '../_actions/items.actions';
 import {NoteMinor} from '@shopify/polaris-icons';
@@ -24,7 +24,7 @@ class InventoryUpdate extends React.Component {
         const tmp = Array.isArray(this.props.items.items) ? this.props.items.items : []
         for(let i = 0; i < tmp.length; i++){
             if(this.props.items.items[i][0] == id){
-                return this.props.items.items[i]
+                return [...this.props.items.items[i]]
             }
         }
         return null
@@ -65,12 +65,19 @@ class InventoryUpdate extends React.Component {
     handleConfirm= () => {
         for (var id in this.state.updates){
             const newCount = this.state.updates[id][6] + this.getInfo(id)[3]
-            itemActions.updateInventory(id, newCount)
+            if (newCount < 0){
+                alert(`Product ${id} has negative count`)
+            }else{
+                itemActions.updateInventory(id, newCount)
+            }
+            
         }
         this.clear()
+        
     }
 
     clear = () => {
+
         this.setState({rows: [], updates: {}, totalCount: 0})
     }
 
@@ -144,6 +151,8 @@ function UpdateForm(props) {
     const handleChangeAmount = useCallback((newValue) => setValue(newValue), []);
 
     const onClick = () => {
+        setPID('')
+        setValue('')
         props.onClick(pID, parseInt(value));
     };
 
@@ -194,6 +203,7 @@ function UploadCSV(props) {
             lines.map(function(line) {
                 var newUpdate = line.split(',');
                 if(newUpdate.length>=7){
+                    setFile(null)
                     props.onClick(newUpdate[0], parseInt(newUpdate[newUpdate.length - 1]));
                 }    
             });
