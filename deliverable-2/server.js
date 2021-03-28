@@ -7,9 +7,11 @@ const { verifyRequest } = require('@shopify/koa-shopify-auth');
 const { default: Shopify, ApiVersion } = require('@shopify/shopify-api');
 const Router = require('koa-router');
 const mysql = require('mysql2')
+const bodyParser = require('koa-bodyparser');
 dotenv.config();
 
 const itemService = require('./items_backend/items.service');
+const { con } = require('./items_backend/connection');
 
 Shopify.Context.initialize({
     API_KEY: process.env.SHOPIFY_API_KEY,
@@ -39,8 +41,10 @@ const ACTIVE_SHOPIFY_SHOPS = {};
 app.prepare().then(() => {
     const server = new Koa();
     const router = new Router();
+    
     server.keys = [Shopify.Context.API_SECRET_KEY];
 
+    server.use(bodyParser());
     server.use(
         createShopifyAuth({
           afterAuth(ctx) {
@@ -72,8 +76,10 @@ app.prepare().then(() => {
         .then(items => ctx.body = (items))
     })
 
-    router.get('/update/:id/:count', async (ctx) => {
-      await itemService.updateInventory(ctx.params.id,ctx.params.count) 
+    router.patch('/update/:id', async (ctx) => {
+      const req = ctx.request.body
+      res = await itemService.updateInventory(ctx.params.id, req.count) 
+      .then(res => ctx.body = (res))
     })
 
 
