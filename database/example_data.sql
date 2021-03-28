@@ -1,5 +1,5 @@
-INSERT INTO store VALUES (1, 'UofT Bookstore');
-INSERT INTO store VALUES (2, 'Tim Hortons');
+INSERT INTO store VALUES (1, 'UofT Bookstore', '');
+INSERT INTO store VALUES (2, 'Tim Hortons', '');
 
 INSERT INTO item VALUES (1, 'UofT hoodie', 1, 1);
 INSERT INTO item VALUES (2, 'UofT hat', 1, 2);
