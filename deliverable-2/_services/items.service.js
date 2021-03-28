@@ -9,7 +9,7 @@ function fetchAll() {
         method : 'GET',
     };
     // `${process.env.SHOPIFY_APP_URL}/items/`
-    return fetch(` http://localhost:3000/items/`, requestOptions).then(handleResponse)
+    return fetch(`http://localhost:3000/items/`, requestOptions).then(handleResponse)
  }
 
  function handleResponse(response) {

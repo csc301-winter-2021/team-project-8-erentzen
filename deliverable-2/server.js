@@ -7,10 +7,15 @@ const { default: createShopifyAuth } = require('@shopify/koa-shopify-auth');
 const { verifyRequest } = require('@shopify/koa-shopify-auth');
 const { default: Shopify, ApiVersion } = require('@shopify/shopify-api');
 const Router = require('koa-router');
+const expressRouter = require('express')
+const express = expressRouter.Router();
 const mysql = require('mysql2')
+const bodyParser = require('koa-bodyparser');
+var request = require('request-promise');
 dotenv.config();
 
 const itemService = require('./items_backend/items.service');
+const storeService = require('./stores_backend/stores.service');
 
 Shopify.Context.initialize({
     API_KEY: process.env.SHOPIFY_API_KEY,
@@ -39,6 +44,7 @@ const ACTIVE_SHOPIFY_SHOPS = {};
 
 app.prepare().then(() => {
     const server = new Koa();
+    server.use(bodyParser());
     const router = new Router();
     server.keys = [Shopify.Context.API_SECRET_KEY];
 
@@ -70,20 +76,24 @@ app.prepare().then(() => {
       //Do I have the token already for this store?
       //Check database
       //For tutorial ONLY - check .env variable value
-      // if (process.env.appStoreTokenTest.length > 0) {
-          // res.redirect('/shopify/app?shop=' + shop);
-      // } else {
-          //go here if you don't have the token yet
+      if (storeService.checkLogin(5)) {
+          console.log("already registered redirecting")
+          ctx.redirect('/');
+      } else {
+          // go here if you don't have the token yet
           ctx.redirect(installUrl);
-      // }
-      })
+      }
+    })
+
+    router.get('/auth', async (ctx) => {
+      console.log("reached auth endpoint")
+      ctx.redirect('/')
+    })
 
     router.get("/shopify/auth", async(ctx) => {
-      console.log("reached auth")
       let securityPass = false;
-      let appId = process.env.SHOPIFY_APP_URL;
+      let appId = process.env.SHOPIFY_API_KEY;
       let appSecret = process.env.SHOPIFY_API_SECRET;
-      console.log(ctx.url)
       let shop = ctx.query.shop;
       let code = ctx.query.code;
   
@@ -120,19 +130,37 @@ app.prepare().then(() => {
               client_secret: appSecret,
               code,
           };
-
-          router.post(accessTokenRequestUrl, async (ctx) => {
-            
-          })
   
-          router.post(accessTokenRequestUrl, { json: accessTokenPayload })
+          request.post(accessTokenRequestUrl, { json: accessTokenPayload })
               .then((accessTokenResponse) => {
                   let accessToken = accessTokenResponse.access_token;
                   console.log('shop token ' + accessToken);
-                  ctx.redirect('/shopify/app?shop=' + shop);
-              })
+                  // GET /admin/api/2021-01/shop.json
+                  let url = 'https://' + shop + '/admin/api/2021-01/shop.json';
+                  let options = {
+                    method: 'GET',
+                    uri: url,
+                    json: true,
+                    resolveWithFullResponse: true,//added this to view status code
+                    headers: {
+                        'X-Shopify-Access-Token': accessToken,
+                        'content-type': 'application/json'
+                    },
+                  };
+                  request.get(options)
+                    .then((response) => {
+                      // temporarily set to 5
+                      storeService.registerStore(response.body.shop.name, 5, accessToken)
+                      ctx.redirect('/')
+                    })
+                    .catch((error) => {
+                      console.log("Error:" + error)
+                    })
+
+                })
               .catch((error) => {
-                  ctx.status(error.statusCode).send(error.error.error_description);
+                console.log(error)
+                  // ctx.status(error.statusCode).send(error.error.error_description);
               });
       }
       else {
@@ -152,7 +180,9 @@ app.prepare().then(() => {
         // if (ACTIVE_SHOPIFY_SHOPS[shop] === undefined) {
         //   ctx.redirect(`/auth?shop=${shop}`);
         // } else {
+          console.log("shop form /" + shop)
           await handleRequest(ctx);
+
         // }
       });
 
@@ -160,8 +190,6 @@ app.prepare().then(() => {
       items = await itemService.getAll()
         .then(items => ctx.body = (items))
     })
-
-
   
     router.get("(/_next/static/.*)", handleRequest);
     router.get("/_next/webpack-hmr", handleRequest);
