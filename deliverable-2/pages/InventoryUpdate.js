@@ -3,6 +3,8 @@ import {Card, DataTable, Page,Button, TextField, Layout, DropZone,Stack, Thumbna
 import { connect } from 'react-redux';
 import { itemActions } from '../_actions/items.actions';
 import {NoteMinor} from '@shopify/polaris-icons';
+import ReactTooltip from 'react-tooltip';
+import {FaInfoCircle} from 'react-icons/fa';
 
 class InventoryUpdate extends React.Component {
     state = {};
@@ -68,6 +70,7 @@ class InventoryUpdate extends React.Component {
             if (newCount < 0){
                 alert(`Product ${id} has negative count`)
             }else{
+                console.log("reached here", id, newCount)
                 itemActions.updateInventory(id, newCount)
             }
             
@@ -213,7 +216,18 @@ function UploadCSV(props) {
     };
 
     return (
-        <Card title='Upload File' sectioned>
+        <Card
+         title={
+            <>  
+            <h2 class="Polaris-Heading" style={{display: 'inline'}}>Upload File &nbsp;</h2>
+            <a data-tip data-for='files'><FaInfoCircle></FaInfoCircle></a>
+            <ReactTooltip id='files' type='info'>
+                <span>File should be formatted as 'ID, Product, Variant, Stock, Pending, Price ($)'</span>
+            </ReactTooltip>
+            </>
+         }
+         sectioned
+         >
             <FormLayout >
                 <DropZone 
                     accept=".csv"
