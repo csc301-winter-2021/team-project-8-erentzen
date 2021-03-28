@@ -23,6 +23,7 @@
     "isomorphic-fetch": "^3.0.0",
     "koa": "^2.13.1",
     "koa-router": "^8.0.8",
+    "koa-bodyparser": "^4.3.0",
     "mysql2": "^2.2.5",
     "next": "^10.0.7",
     "node": "^15.8.0",

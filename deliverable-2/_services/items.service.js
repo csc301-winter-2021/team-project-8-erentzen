@@ -13,10 +13,19 @@ function fetchAll() {
  }
 
 function updateInventory(id, count) {
-    const requestOptions = {
-        method : 'GET',
-    };
-    return fetch(`http://localhost:3000/update/${id}/${count}`, requestOptions)
+    const url = `http://localhost:3000/update/${id}`
+
+    const request = new Request(url, {
+        method: 'PATCH', 
+        body: JSON.stringify({
+            count: count
+        }),
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    });
+    return fetch(request)
+
  }
 
  function handleResponse(response) {

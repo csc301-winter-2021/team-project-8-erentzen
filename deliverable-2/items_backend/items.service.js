@@ -40,6 +40,7 @@ async function getAll() {
 async function updateInventory(id, count) {
   const sql = `update erentzen.variant set stock = ${count} where variant_id = ${id};`
   await con.promise().query(sql);
+  return "Update Success"
 }
 
 // getAll(function(err,data){
