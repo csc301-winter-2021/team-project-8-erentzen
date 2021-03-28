@@ -95,6 +95,11 @@ function Table(props) {
     }  
     let encodedUri = encodeURI(csvContent);
     window.open(encodedUri);
+    var hiddenElement = document.createElement('a');
+    hiddenElement.href = encodeURI(csvContent);
+    hiddenElement.target = '_blank';
+    hiddenElement.download = 'exported_data.csv';
+    hiddenElement.click();
   }
 
   return (
