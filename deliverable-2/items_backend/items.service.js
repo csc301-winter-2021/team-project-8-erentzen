@@ -96,7 +96,7 @@ async function getAll() {
 }
 
 async function getRecentOrder(){
-    const select = 'SELECT order_id, item_name,erentzen.variant.variant_id, description, quantity'
+    // const select = 'SELECT order_id, item_name,erentzen.variant.variant_id, description, quantity'
     const select = `SELECT order_id, erentzen.variant.variant_id, item_name, description, comleted as completed, quantity
     FROM erentzen.item JOIN erentzen.variant ON erentzen.item.item_id = erentzen.variant.item_id
     LEFT JOIN erentzen.item_order ON erentzen.variant.variant_id = erentzen.item_order.variant_id;`;
