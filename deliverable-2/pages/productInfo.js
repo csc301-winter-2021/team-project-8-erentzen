@@ -1,4 +1,4 @@
-import React, { useState , useCallback }from 'react';
+import React, { useState , useCallback, useEffect }from 'react';
 import { Layout, Page, Tabs, Card, DataTable, MediaCard, Modal } from '@shopify/polaris';
 import { connect } from 'react-redux';
 import { itemActions } from '../_actions/items.actions';
@@ -91,8 +91,8 @@ const actionCreators = {
 
 
 export default function ProductModal(props) {
-  const [active, setActive] = useState(true);
-
+  // const [active, setActive] = useState(false);
+  const { active, setActive, name, stock, type, id } = props;
   const handleChange = useCallback(() => setActive(!active), [active]);
 
   return (
@@ -100,15 +100,15 @@ export default function ProductModal(props) {
       <Modal
         activator={props.activator}
         open={active}
-        onClose={handleChange}
+        onClose={() => setActive(!active)}
         title="Product Info"
         primaryAction={{
           content: "Done",
-          onAction: handleChange
+          onAction: () => setActive(!active)
         }}
       >
         <Modal.Section>
-          <MediaCard title={"Product ID: " + 69} description={""}>
+          <MediaCard title={"Product ID: " + id} description={""}>
             <img
               alt=""
               width="100%"
@@ -120,9 +120,9 @@ export default function ProductModal(props) {
             />
           </MediaCard>
           <Card title={"Details"} sectioned>
-            <span>Name: {props.name}</span> <br />
-            <span>In Stock: {props.stock}</span> <br />
-            <span>Type: {props.type}</span> <br />
+            <span>Name: {name}</span> <br />
+            <span>In Stock: {stock}</span> <br />
+            <span>Type: {type}</span> <br />
           </Card>
 
           <Card title={"Sales History"} sectioned>

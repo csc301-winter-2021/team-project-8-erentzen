@@ -50,11 +50,11 @@ class InventoryUpdate extends React.Component {
         } else {
             const info = this.getInfo(id)
             if(info == null){
-                alert('id not exist')
+                amount = 0
+                alert('id does not exist')
             }else{
                 info.push(amount)
                 newUpdate[id] = info
-                
             }
         }
         this.setState({updates: newUpdate})
@@ -70,10 +70,8 @@ class InventoryUpdate extends React.Component {
             if (newCount < 0){
                 alert(`Product ${id} has negative count`)
             }else{
-                console.log("reached here", id, newCount)
                 itemActions.updateInventory(id, newCount)
             }
-            
         }
         this.clear()
         
@@ -160,7 +158,17 @@ function UpdateForm(props) {
     };
 
     return (
-        <Card title='Add Entries' sectioned>
+        <Card 
+        title={
+            <>  
+            <h2 class="Polaris-Heading" style={{display: 'inline'}}>Add Entries &nbsp;</h2>
+            <a data-tip data-for='add'><FaInfoCircle></FaInfoCircle></a>
+            <ReactTooltip id='add' type='info'>
+                <span>Update existing items' stock here using their id</span>
+            </ReactTooltip>
+            </>
+        }
+        sectioned>
             <FormLayout>
                 <TextField label={"Product ID"} type={'number'} value={pID} onChange={handleChangeID} />
                 <TextField label={"Amount"} type={'number'} value={value} onChange={handleChangeAmount} />

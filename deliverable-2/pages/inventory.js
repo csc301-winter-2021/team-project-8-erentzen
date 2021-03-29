@@ -1,8 +1,9 @@
-import React, { useState , useCallback }from 'react';
+import React, { useState , useEffect, useCallback }from 'react';
 import { Layout, Page, Tabs, Card, DataTable, Button, TextField, Icon } from '@shopify/polaris';
 import {SearchMinor} from '@shopify/polaris-icons';
 import { connect } from 'react-redux';
 import { itemActions } from '../_actions/items.actions';
+import ProductModal from './productInfo';
 
 class Inventory extends React.Component {
   state = {};
@@ -23,7 +24,6 @@ class Inventory extends React.Component {
     return (
       <Page fullWidth>
         <Layout>
-          {console.log(this.state.items, "state items")}
           <StockTabs items={this.props.items}></StockTabs>
         </Layout>
       </Page>
@@ -34,13 +34,47 @@ class Inventory extends React.Component {
 
 // Table for the products
 function Table(props) {
+  const [openModal, setOpenModal] = useState(false)
+  const [clickableRows, setClickableRows] = useState([])
+  const [curItem, setCurItem] = useState({
+    id: 0,
+    name: "",
+    type: "",
+    stock: 0
+  })
+
+  const setItem = (item) => {
+    setOpenModal(true)
+    setCurItem(item)
+  }
+
+  useEffect(() => {
+    if (Array.isArray(props.items.items)) {
+      let newRows = []
+      for (let i =0; i< props.items.items.length; i+=1) {
+        let newVersion = []
+        newVersion.push(
+          <div onClick={() => setItem({
+            name: props.items.items[i][1],
+            id: props.items.items[i][0],
+            stock: props.items.items[i][3],
+            type: props.items.items[i][2]
+          })}>{props.items.items[i][0]}</div>
+        )
+        newVersion = newVersion.concat(props.items.items[i].slice(1, props.items.items[i].length))
+        newRows.push(newVersion)
+      }
+      setClickableRows(newRows)
+    }
+  }, [props.items.items]);
+
+ 
   const [sortedRows, setSortedRows] = useState(null);
   const LOW_STOCK_THRESHOLD = 5;
 
   let filteredRows = [];
   let searchKeyword = ""
-  console.log(Array.isArray(props.items.items), "in table")
-  const initiallySortedRows = Array.isArray(props.items.items) ? props.items.items : []
+  const initiallySortedRows = Array.isArray(clickableRows) ? clickableRows : []
   // const initiallySortedRows = []
 
   switch (props.selected) {
@@ -71,6 +105,7 @@ function Table(props) {
     [rows],
   );
 
+  // bug for sort by index
   const sortRows = (rows, index, direction) => {
     return [...rows].sort((rowA, rowB) => {
       const result = rowA[index] > rowB[index] ? 1 : -1;
@@ -134,6 +169,7 @@ function Table(props) {
       <Layout.Section>
         <Button plain onClick={downloadCSV}>Download CSV</Button>
       </Layout.Section>
+      <ProductModal active={openModal} setActive={setOpenModal} name={curItem.name} stock={curItem.stock} type={curItem.type} id={curItem.id}/>
     </Layout>
   );
 }
@@ -158,7 +194,6 @@ function SearchBar(props) {
 // Tabs for identifying status of products
 function StockTabs(props) {
   const [selected, setSelected] = useState(0);
-  console.log(props.items, "stock tab items")
   const handleTabChange = useCallback(
     (selectedTabIndex) => setSelected(selectedTabIndex),
     [],
