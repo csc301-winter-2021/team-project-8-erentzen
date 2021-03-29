@@ -50,11 +50,11 @@ class InventoryUpdate extends React.Component {
         } else {
             const info = this.getInfo(id)
             if(info == null){
-                alert('id not exist')
+                amount = 0
+                alert('id does not exist')
             }else{
                 info.push(amount)
                 newUpdate[id] = info
-                
             }
         }
         this.setState({updates: newUpdate})
@@ -70,10 +70,8 @@ class InventoryUpdate extends React.Component {
             if (newCount < 0){
                 alert(`Product ${id} has negative count`)
             }else{
-                console.log("reached here", id, newCount)
                 itemActions.updateInventory(id, newCount)
             }
-            
         }
         this.clear()
         
@@ -154,13 +152,25 @@ function UpdateForm(props) {
     const handleChangeAmount = useCallback((newValue) => setValue(newValue), []);
 
     const onClick = () => {
-        setPID('')
-        setValue('')
-        props.onClick(pID, parseInt(value));
+        if(pID && value){
+            setPID('')
+            setValue('')
+            props.onClick(pID, parseInt(value));
+        }
     };
 
     return (
-        <Card title='Add Entries' sectioned>
+        <Card 
+        title={
+            <>  
+            <h2 className="Polaris-Heading" style={{display: 'inline'}}>Add Entries &nbsp;</h2>
+            <a data-tip data-for='add'><FaInfoCircle></FaInfoCircle></a>
+            <ReactTooltip id='add' type='info'>
+                <span>Update existing items' stock here using their id</span>
+            </ReactTooltip>
+            </>
+        }
+        sectioned>
             <FormLayout>
                 <TextField label={"Product ID"} type={'number'} value={pID} onChange={handleChangeID} />
                 <TextField label={"Amount"} type={'number'} value={value} onChange={handleChangeAmount} />
@@ -198,10 +208,11 @@ function UploadCSV(props) {
     );
 
     const onClick = () => {
-        var reader = new FileReader()
-        reader.readAsText(file);
+        if(file){
+            var reader = new FileReader()
+            reader.readAsText(file);
 
-        reader.onload = function() {
+            reader.onload = function() {
             const lines = reader.result.split('\n');
             lines.map(function(line) {
                 var newUpdate = line.split(',');
@@ -212,6 +223,8 @@ function UploadCSV(props) {
             });
           
         };
+        }
+        
 
     };
 
@@ -219,7 +232,7 @@ function UploadCSV(props) {
         <Card
          title={
             <>  
-            <h2 class="Polaris-Heading" style={{display: 'inline'}}>Upload File &nbsp;</h2>
+            <h2 className="Polaris-Heading" style={{display: 'inline'}}>Upload File &nbsp;</h2>
             <a data-tip data-for='files'><FaInfoCircle></FaInfoCircle></a>
             <ReactTooltip id='files' type='info'>
                 <span>File should be formatted as 'ID, Product, Variant, Stock, Pending, Price ($)'</span>
