@@ -59,7 +59,7 @@ function PieChart(props) {
     const setData = (rows) => {
         console.log(props.items, "props item")
         console.log(initiallySortedRows, "pie chart row")
-        return [getLowStk(rows).length, rows.length]
+        return [getLowStk(rows).length, rows.length-getLowStk(rows).length]
     }
 
     let data = {
