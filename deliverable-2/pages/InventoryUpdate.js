@@ -161,7 +161,7 @@ function UpdateForm(props) {
         <Card 
         title={
             <>  
-            <h2 class="Polaris-Heading" style={{display: 'inline'}}>Add Entries &nbsp;</h2>
+            <h2 className="Polaris-Heading" style={{display: 'inline'}}>Add Entries &nbsp;</h2>
             <a data-tip data-for='add'><FaInfoCircle></FaInfoCircle></a>
             <ReactTooltip id='add' type='info'>
                 <span>Update existing items' stock here using their id</span>
@@ -227,7 +227,7 @@ function UploadCSV(props) {
         <Card
          title={
             <>  
-            <h2 class="Polaris-Heading" style={{display: 'inline'}}>Upload File &nbsp;</h2>
+            <h2 className="Polaris-Heading" style={{display: 'inline'}}>Upload File &nbsp;</h2>
             <a data-tip data-for='files'><FaInfoCircle></FaInfoCircle></a>
             <ReactTooltip id='files' type='info'>
                 <span>File should be formatted as 'ID, Product, Variant, Stock, Pending, Price ($)'</span>
