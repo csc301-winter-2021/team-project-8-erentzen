@@ -152,9 +152,11 @@ function UpdateForm(props) {
     const handleChangeAmount = useCallback((newValue) => setValue(newValue), []);
 
     const onClick = () => {
-        setPID('')
-        setValue('')
-        props.onClick(pID, parseInt(value));
+        if(pID && value){
+            setPID('')
+            setValue('')
+            props.onClick(pID, parseInt(value));
+        }
     };
 
     return (
@@ -206,10 +208,11 @@ function UploadCSV(props) {
     );
 
     const onClick = () => {
-        var reader = new FileReader()
-        reader.readAsText(file);
+        if(file){
+            var reader = new FileReader()
+            reader.readAsText(file);
 
-        reader.onload = function() {
+            reader.onload = function() {
             const lines = reader.result.split('\n');
             lines.map(function(line) {
                 var newUpdate = line.split(',');
@@ -220,6 +223,8 @@ function UploadCSV(props) {
             });
           
         };
+        }
+        
 
     };
 
