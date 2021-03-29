@@ -119,6 +119,11 @@ function Table(props) {
       let value = rows[i];
       for (let j = 0; j < value.length; j++) {
           let innerValue =  value[j]===null?'':value[j].toString();
+
+          if(!j){
+            innerValue = value[0].props.children.toString()
+          }
+
           let result = innerValue.replace(/"/g, '""');
           if (result.search(/("|,|\n)/g) >= 0)
               result = '"' + result + '"';
@@ -128,8 +133,10 @@ function Table(props) {
       }
       csvContent += '\n';
     }  
-    let encodedUri = encodeURI(csvContent);
-    window.open(encodedUri);
+    
+    // let encodedUri = encodeURI(csvContent);
+    // window.open(encodedUri);
+
     var hiddenElement = document.createElement('a');
     hiddenElement.href = encodeURI(csvContent);
     hiddenElement.target = '_blank';
