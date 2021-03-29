@@ -2,7 +2,8 @@
 
 export const itemService = {
     fetchAll,
-    updateInventory
+    updateInventory,
+    getRecentOrder
 };
 
 function fetchAll() {
@@ -11,6 +12,13 @@ function fetchAll() {
     };
     return fetch(`http://localhost:3000/items/`, requestOptions).then(handleResponse)
  }
+
+function getRecentOrder(){
+    const requestOptions = {
+        method : 'GET',
+    };
+    return fetch(`http://localhost:3000/orders/`, requestOptions).then(handleResponse)
+}
 
 function updateInventory(id, count) {
     const url = `http://localhost:3000/update/${id}`

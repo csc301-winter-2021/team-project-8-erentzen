@@ -3,7 +3,8 @@ import {itemConstants} from '../_constants';
 
 export const itemActions = {
     fetchAll,
-    updateInventory
+    updateInventory,
+    getRecentOrder,
 };
 
 function fetchAll() {
@@ -14,6 +15,7 @@ function fetchAll() {
                 items => dispatch(success(items)),
                 error => dispatch(failure(error.toString()))
             );
+        
     };
     function request() { return { type: itemConstants.FETCH_REQUEST } }
     function success(items) { return { type: itemConstants.FETCH_SUCCESS, items } }
@@ -22,4 +24,20 @@ function fetchAll() {
 
 function updateInventory(id, count) {
     itemService.updateInventory(id, count)
+}
+
+function getRecentOrder(){
+    return dispatch => {
+        dispatch(request());
+        itemService.getRecentOrder()
+            .then(
+                orders => dispatch(success(orders)),
+                error => dispatch(failure(error.toString()))
+            );
+
+    };
+    function request() { return { type: itemConstants.FETCH_REQUEST } }
+    function success(orders) { return { type: itemConstants.FETCH_SUCCESS, orders } }
+    function failure(error) { return { type: itemConstants.FETCH_FAILURE, error } }
+    
 }

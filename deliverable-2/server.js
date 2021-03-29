@@ -76,6 +76,11 @@ app.prepare().then(() => {
         .then(items => ctx.body = (items))
     })
 
+    router.get('/orders', async (ctx) => {
+      orders = await itemService.getRecentOrder()
+        .then(orders => ctx.body = (orders))
+    })
+
     router.patch('/update/:id', async (ctx) => {
       const req = ctx.request.body
       res = await itemService.updateInventory(ctx.params.id, req.count) 

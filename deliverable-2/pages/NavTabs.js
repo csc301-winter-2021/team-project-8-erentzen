@@ -1,6 +1,6 @@
 import React, { useState , useCallback }from 'react';
 import { Layout, Page, Tabs, Card, DataTable, Button, TextField, Icon } from '@shopify/polaris';
-import Dashboard from './Dashboard';
+import {Dashboard} from './Dashboard';
 import {InventoryUpdate} from './InventoryUpdate';
 import {Inventory} from './inventory';
 // import '@shopify/polaris/styles.css';
