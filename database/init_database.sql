@@ -22,7 +22,7 @@ USE erentzen;
 
 CREATE TABLE store(
     store_id INT PRIMARY KEY,
-    store_name VARCHAR(50) NOT NULL,
+    store_name VARCHAR(50) UNIQUE NOT NULL,
     oauth_code VARCHAR(100)
 );
 
@@ -34,7 +34,7 @@ CREATE TABLE item(
 );
 
 CREATE TABLE variant(
-    variant_id INT PRIMARY KEY,
+    variant_id BIGINT PRIMARY KEY,
     item_id INT,
     description VARCHAR(255),
     price DECIMAL(10, 2) NOT NULL,
