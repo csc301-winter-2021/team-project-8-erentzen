@@ -76,7 +76,7 @@ app.prepare().then(() => {
       //Do I have the token already for this store?
       //Check database
       //For tutorial ONLY - check .env variable value
-      if (storeService.checkLogin(5)) {
+      if (storeService.checkLogin(shop.toString()) == true) {
           console.log("already registered redirecting")
           ctx.redirect('/');
       } else {
@@ -89,6 +89,12 @@ app.prepare().then(() => {
       console.log("reached auth endpoint")
       ctx.redirect('/')
     })
+
+    // GET PRODUCTS WHERE WE UPDATE DB AND SHOPIFY
+    router.get('/products', async (ctx) => {
+      // replace later with the shop we get from url...
+      storeService.getProducts("erentzen.myshopify.com")
+    });
 
     router.get("/shopify/auth", async(ctx) => {
       let securityPass = false;
@@ -150,7 +156,7 @@ app.prepare().then(() => {
                   request.get(options)
                     .then((response) => {
                       // temporarily set to 5
-                      storeService.registerStore(response.body.shop.name, 5, accessToken)
+                      storeService.registerStore(shop.toString(), 9, accessToken)
                       ctx.redirect('/')
                     })
                     .catch((error) => {
@@ -180,7 +186,7 @@ app.prepare().then(() => {
         // if (ACTIVE_SHOPIFY_SHOPS[shop] === undefined) {
         //   ctx.redirect(`/auth?shop=${shop}`);
         // } else {
-          console.log("shop form /" + shop)
+
           await handleRequest(ctx);
 
         // }
