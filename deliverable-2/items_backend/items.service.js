@@ -96,20 +96,17 @@ async function getAll() {
 }
 
 async function getRecentOrder(){
-    // const select = 'SELECT order_id, item_name,erentzen.variant.variant_id, description, quantity'
-    const select = `SELECT order_id, erentzen.variant.variant_id, item_name, description, comleted as completed, quantity
-    FROM erentzen.item JOIN erentzen.variant ON erentzen.item.item_id = erentzen.variant.item_id
-    LEFT JOIN erentzen.item_order ON erentzen.variant.variant_id = erentzen.item_order.variant_id;`;
+    const select = `SELECT order_id, item_name, description, quantity, data_time  from erentzen.variant JOIN erentzen.item_order ON erentzen.variant.variant_id = erentzen.item_order.variant_id LEFT JOIN erentzen.item ON erentzen.variant.item_id = erentzen.item.item_id;`;
     const query = await con.promise().query(select);
     const result = query[0];
     rows = []
     for (i = 0; i < result.length; i++) {
       order = [
-          // item_id?
           result[i].order_id,
           result[i].item_name,
           result[i].description,
-          result[i].quantity
+          result[i].quantity,
+          result[i].data_time,
         ]
       rows.push(order)
     }

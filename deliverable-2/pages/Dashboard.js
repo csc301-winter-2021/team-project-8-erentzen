@@ -9,29 +9,24 @@ import { itemActions } from '../_actions/items.actions';
 
 
 class Dashboard extends Component {
-    state = {};
 
     constructor(props) {
         super(props);
-        this.state = {
-        items: [],
-        orders: []
-        };
     }
 
     componentDidMount() {
         this.props.fetchAll()
-        this.state.items = this.props.items
-        // this.state.orders = this.props.orders
+        this.props.getRecentOrder()
     }
 
     render() {
       return (
         <Page fullWidth>
           <Layout>
-              <PieChart items={this.props.items} ></PieChart>
-              <LowStkTable items={this.props.items}></LowStkTable>
-              <RecentOrderTable orders={Array.isArray(this.props.orders) ? this.props.orders:[]}></RecentOrderTable>
+              <PieChart items={this.props.items.items} ></PieChart>
+              <LowStkTable items={this.props.items.items}></LowStkTable>
+              {/* <RecentOrderTable orders={Array.isArray(this.props.orders) ? this.props.orders:[]}></RecentOrderTable> */}
+              <RecentOrderTable orders={this.props.items.orders}></RecentOrderTable>
           </Layout>
         </Page>
       );
@@ -48,7 +43,7 @@ function PieChart(props) {
     //     [4, "UofT T-Shirt", "Black", 0, 0, 27.99],
     //     [5, "UofT T-Shirt", "White", 1, 0, 27.99]
     // ]
-    const initiallySortedRows = Array.isArray( props.items.items) ? props.items.items:[]
+    const initiallySortedRows = Array.isArray( props.items) ? props.items:[]
    
     
     const getLowStk = (rows) => {
@@ -57,8 +52,7 @@ function PieChart(props) {
     }
    
     const setData = (rows) => {
-        console.log(props.items, "props item")
-        console.log(initiallySortedRows, "pie chart row")
+        
         return [getLowStk(rows).length, rows.length-getLowStk(rows).length]
     }
 
@@ -103,7 +97,7 @@ function LowStkTable(props) {
     //     [4, "UofT T-Shirt", "Black", 0, 0, 27.99],
     //     [5, "UofT T-Shirt", "White", 1, 0, 27.99]
     // ]
-    const initiallySortedRows = Array.isArray( props.items.items) ? props.items.items:[]
+    const initiallySortedRows = Array.isArray( props.items) ? props.items:[]
     const getLowStk = (rows) => {
         return rows.filter(row =>
             row[3] <= LOW_STOCK_THRESHOLD)
@@ -164,7 +158,9 @@ function RecentOrderTable(props) {
     //     ['005','UofT T-shirt', 'Black', 1]
         
     // ];
-    const initialOrderRows = props.orders
+    // const initialOrderRows = props.orders
+    const initialOrderRows = Array.isArray( props.orders) ? props.orders:[]
+    console.log(initialOrderRows, "order table")
     let filteredRows = (initialOrderRows.length > VIEW_NUM) ? initialOrderRows.slice(0, VIEW_NUM) : initialOrderRows;
     const rows = sortedRows ? sortedRows : filteredRows;
     ;
@@ -188,7 +184,7 @@ function RecentOrderTable(props) {
                         'numeric',
                         'numeric',
                         'numeric',
-                        'numeric',
+                        'numeric'
                     ]}
                     headings={[
                         'ID',
@@ -206,14 +202,11 @@ function RecentOrderTable(props) {
         </Layout.Section>
     )
 }
-// function mapState(state) {
-//     const { items, orders } = state;
-//     return { items, orders }
-//   }
 function mapState(state) {
-    console.log(state)
-    const { items } = state;
-    return { items }
+    console.log(state, "state")
+    // const { items, orders } = state;
+    // const{ orders } = state.orders;
+    return state
   }
 
 const actionCreators = {

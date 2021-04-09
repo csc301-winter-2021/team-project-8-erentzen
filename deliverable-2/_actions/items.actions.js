@@ -37,7 +37,7 @@ function getRecentOrder(){
 
     };
     function request() { return { type: itemConstants.FETCH_REQUEST } }
-    function success(orders) { return { type: itemConstants.FETCH_SUCCESS, orders } }
+    function success(orders) { return { type: itemConstants.FETCH_ORDER_SUCCESS, orders } }
     function failure(error) { return { type: itemConstants.FETCH_FAILURE, error } }
     
 }
