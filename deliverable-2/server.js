@@ -6,8 +6,12 @@ const { default: createShopifyAuth } = require('@shopify/koa-shopify-auth');
 const { verifyRequest } = require('@shopify/koa-shopify-auth');
 const { default: Shopify, ApiVersion } = require('@shopify/shopify-api');
 const Router = require('koa-router');
-
+const mysql = require('mysql2')
+const bodyParser = require('koa-bodyparser');
 dotenv.config();
+
+const itemService = require('./items_backend/items.service');
+const { con } = require('./items_backend/connection');
 
 Shopify.Context.initialize({
     API_KEY: process.env.SHOPIFY_API_KEY,
@@ -26,11 +30,21 @@ const handle = app.getRequestHandler();
 
 const ACTIVE_SHOPIFY_SHOPS = {};
 
+
+// const con = mysql.createConnection({
+//   host: process.env.MYSQL_HOST,
+//   user: process.env.MYSQL_USERNAME,
+//   password: process.env.MYSQL_PASSWORD,
+// });
+
+
 app.prepare().then(() => {
     const server = new Koa();
     const router = new Router();
+    
     server.keys = [Shopify.Context.API_SECRET_KEY];
 
+    server.use(bodyParser());
     server.use(
         createShopifyAuth({
           afterAuth(ctx) {
@@ -49,7 +63,6 @@ app.prepare().then(() => {
 
     router.get("/", async (ctx) => {
         const shop = ctx.query.shop;
-        
         // DO NOT UNCOMMENT OR DELETE
         // if (ACTIVE_SHOPIFY_SHOPS[shop] === undefined) {
         //   ctx.redirect(`/auth?shop=${shop}`);
@@ -57,6 +70,24 @@ app.prepare().then(() => {
           await handleRequest(ctx);
         // }
       });
+
+    router.get('/items', async (ctx) => {
+      items = await itemService.getAll()
+        .then(items => ctx.body = (items))
+    })
+
+    router.get('/orders', async (ctx) => {
+      orders = await itemService.getRecentOrder()
+        .then(orders => ctx.body = (orders))
+    })
+
+    router.patch('/update/:id', async (ctx) => {
+      const req = ctx.request.body
+      res = await itemService.updateInventory(ctx.params.id, req.count) 
+      .then(res => ctx.body = (res))
+    })
+
+
   
     router.get("(/_next/static/.*)", handleRequest);
     router.get("/_next/webpack-hmr", handleRequest);

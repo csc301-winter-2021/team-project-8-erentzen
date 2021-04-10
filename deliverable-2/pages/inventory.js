@@ -1,15 +1,30 @@
-import React, { useState , useCallback }from 'react';
+import React, { useState , useEffect, useCallback }from 'react';
 import { Layout, Page, Tabs, Card, DataTable, Button, TextField, Icon } from '@shopify/polaris';
 import {SearchMinor} from '@shopify/polaris-icons';
+import { connect } from 'react-redux';
+import { itemActions } from '../_actions/items.actions';
+import ProductModal from './productInfo';
 
 class Inventory extends React.Component {
   state = {};
+
+  constructor(props) {
+    super(props);
+    this.state = {
+      items: []
+    };
+  }
+
+  componentDidMount() {
+    this.props.fetchAll()
+    this.state.items = this.props.items
+  }
 
   render() {
     return (
       <Page fullWidth>
         <Layout>
-          <StockTabs></StockTabs>
+          <StockTabs items={this.props.items}></StockTabs>
         </Layout>
       </Page>
     );
@@ -17,23 +32,50 @@ class Inventory extends React.Component {
 }
 
 
-
 // Table for the products
 function Table(props) {
+  const [openModal, setOpenModal] = useState(false)
+  const [clickableRows, setClickableRows] = useState([])
+  const [curItem, setCurItem] = useState({
+    id: 0,
+    name: "",
+    type: "",
+    stock: 0
+  })
+
+  const setItem = (item) => {
+    setOpenModal(true)
+    setCurItem(item)
+  }
+
+  useEffect(() => {
+    if (Array.isArray(props.items.items)) {
+      let newRows = []
+      for (let i =0; i< props.items.items.length; i+=1) {
+        let newVersion = []
+        newVersion.push(
+          <div onClick={() => setItem({
+            name: props.items.items[i][1],
+            id: props.items.items[i][0],
+            stock: props.items.items[i][3],
+            type: props.items.items[i][2]
+          })}>{props.items.items[i][0]}</div>
+        )
+        newVersion = newVersion.concat(props.items.items[i].slice(1, props.items.items[i].length))
+        newRows.push(newVersion)
+      }
+      setClickableRows(newRows)
+    }
+  }, [props.items.items]);
+
+ 
   const [sortedRows, setSortedRows] = useState(null);
   const LOW_STOCK_THRESHOLD = 5;
 
-  // Dummy data
-  const initiallySortedRows = [
-    [1, "UofT hoodie", "White, S", 34, 2, 59.99],
-    [2, "UofT hoodie", "White, L", 52, 1, 59.99],
-    [3, "UofT hat", "Blue", 15, 0, 32.99],
-    [4, "UofT T-Shirt", "Black", 0, 0, 27.99],
-    [5, "UofT T-Shirt", "White", 1, 0, 27.99]
-  ]
-
   let filteredRows = [];
   let searchKeyword = ""
+  const initiallySortedRows = Array.isArray(clickableRows) ? clickableRows : []
+  // const initiallySortedRows = []
 
   switch (props.selected) {
     case 1: // Low stock
@@ -63,6 +105,7 @@ function Table(props) {
     [rows],
   );
 
+  // bug for sort by index
   const sortRows = (rows, index, direction) => {
     return [...rows].sort((rowA, rowB) => {
       const result = rowA[index] > rowB[index] ? 1 : -1;
@@ -76,6 +119,11 @@ function Table(props) {
       let value = rows[i];
       for (let j = 0; j < value.length; j++) {
           let innerValue =  value[j]===null?'':value[j].toString();
+
+          if(!j){
+            innerValue = value[0].props.children.toString()
+          }
+
           let result = innerValue.replace(/"/g, '""');
           if (result.search(/("|,|\n)/g) >= 0)
               result = '"' + result + '"';
@@ -85,8 +133,15 @@ function Table(props) {
       }
       csvContent += '\n';
     }  
-    let encodedUri = encodeURI(csvContent);
-    window.open(encodedUri);
+    
+    // let encodedUri = encodeURI(csvContent);
+    // window.open(encodedUri);
+
+    var hiddenElement = document.createElement('a');
+    hiddenElement.href = encodeURI(csvContent);
+    hiddenElement.target = '_blank';
+    hiddenElement.download = 'exported_data.csv';
+    hiddenElement.click();
   }
 
   return (
@@ -121,6 +176,7 @@ function Table(props) {
       <Layout.Section>
         <Button plain onClick={downloadCSV}>Download CSV</Button>
       </Layout.Section>
+      <ProductModal active={openModal} setActive={setOpenModal} name={curItem.name} stock={curItem.stock} type={curItem.type} id={curItem.id}/>
     </Layout>
   );
 }
@@ -143,9 +199,8 @@ function SearchBar(props) {
 }
 
 // Tabs for identifying status of products
-function StockTabs() {
+function StockTabs(props) {
   const [selected, setSelected] = useState(0);
-
   const handleTabChange = useCallback(
     (selectedTabIndex) => setSelected(selectedTabIndex),
     [],
@@ -174,11 +229,21 @@ function StockTabs() {
     <Card>
       <Tabs tabs={tabs} selected={selected} onSelect={handleTabChange} fitted>
         <Card.Section>
-          <Table selected={selected}></Table>
+          <Table items={props.items} selected={selected}></Table>
         </Card.Section>
       </Tabs>
     </Card>
   );
 }
 
-export default Inventory;
+function mapState(state) {
+  const { items } = state;
+  return { items }
+}
+
+const actionCreators = {
+  fetchAll: itemActions.fetchAll
+}
+
+const connectedInventory = connect(mapState, actionCreators)(Inventory);
+export {connectedInventory as Inventory };
