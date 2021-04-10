@@ -58,10 +58,6 @@ app.prepare().then(() => {
         }),
       );
 
-    router.post("/graphql", verifyRequest(), async (ctx, next) => {
-      await Shopify.Utils.graphqlProxy(ctx.req, ctx.res);
-    });
-
     router.get("/install.php", async (ctx, next) => {
       var shop = ctx.query.shop;
       var appId = process.env.SHOPIFY_API_KEY;
@@ -85,11 +81,6 @@ app.prepare().then(() => {
       }
     })
 
-    router.get('/auth', async (ctx) => {
-      console.log("reached auth endpoint")
-      ctx.redirect('/')
-    })
-
     // GET PRODUCTS WHERE WE UPDATE DB AND SHOPIFY
     router.get('/products', async (ctx) => {
       // replace later with the shop we get from url...
@@ -97,6 +88,8 @@ app.prepare().then(() => {
     });
 
     router.get("/shopify/auth", async(ctx) => {
+      ctx.redirect("https://erentzen.myshopify.com/admin/apps/erentzen-1")
+    
       let securityPass = false;
       let appId = process.env.SHOPIFY_API_KEY;
       let appSecret = process.env.SHOPIFY_API_SECRET;
@@ -118,15 +111,7 @@ app.prepare().then(() => {
       // 2. Get the 'query string' portion
       let query = urlObj.search.slice(1);
       securityPass = true;
-      // if (verifyCall.verify(query)) {
-      //     //get token
-      //     console.log('get token');
-      //     securityPass = true;
-      // } else {
-      //     //exit
-      //     securityPass = false;
-      // }
-  
+
       if (securityPass && regex) {
   
           //Exchange temporary code for a permanent access token
@@ -140,7 +125,6 @@ app.prepare().then(() => {
           request.post(accessTokenRequestUrl, { json: accessTokenPayload })
               .then((accessTokenResponse) => {
                   let accessToken = accessTokenResponse.access_token;
-                  console.log('shop token ' + accessToken);
                   // GET /admin/api/2021-01/shop.json
                   let url = 'https://' + shop + '/admin/api/2021-01/shop.json';
                   let options = {
@@ -157,11 +141,14 @@ app.prepare().then(() => {
                     .then((response) => {
                       // temporarily set to 5
                       storeService.registerStore(shop.toString(), 9, accessToken)
-                      ctx.redirect('/')
+                      ctx.redirect('/shopify/app?shop=' + shop);
+                      // ctx.redirect('https://erentzen.myshopify.com/admin/apps/shopify-graphiql-app')
+                      console.log("trying to redirect")
                     })
                     .catch((error) => {
                       console.log("Error:" + error)
                     })
+
 
                 })
               .catch((error) => {
@@ -186,6 +173,9 @@ app.prepare().then(() => {
         // if (ACTIVE_SHOPIFY_SHOPS[shop] === undefined) {
         //   ctx.redirect(`/auth?shop=${shop}`);
         // } else {
+
+
+          
 
           await handleRequest(ctx);
 

@@ -18,7 +18,7 @@ async function registerStore(name, id, oauth) {
             if (results[0][0].oauth_code !== oauth) { // update oauth if oauth not the same
                 sql = `UPDATE erentzen.store
                         SET oauth_code = '${oauth}'
-                        WHERE store_name = ${name};`;
+                        WHERE store_name = "${name}";`;
                 await con.promise().query(sql)
             }
         } else { // does not exists so we add into table
@@ -26,7 +26,6 @@ async function registerStore(name, id, oauth) {
                         VALUES (${id}, '${name}', '${oauth}');`;
             await con.promise().query(sql);
         }
-        
         sql = `SELECT * FROM erentzen.store;`;
         const d = await con.promise().query(sql);
         console.log(d)
@@ -44,8 +43,7 @@ async function checkLogin(name) {
         let sql = `SELECT * FROM erentzen.store
         WHERE store_name = "${name}";`;
         const results = await con.promise().query(sql);
-        console.log(results[0])
-        console.log(results[0].length)
+
         if (results[0].length > 0) {
             console.log("returning true")
             return true
