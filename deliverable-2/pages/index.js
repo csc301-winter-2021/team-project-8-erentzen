@@ -1,6 +1,6 @@
 import { Layout, Page, TextStyle } from '@shopify/polaris';
 import NavTabs from './NavTabs';
-import Nav from './NavBar';
+import Nav from '../components/NavBar';
 
 const Index = () => (
     <Page>

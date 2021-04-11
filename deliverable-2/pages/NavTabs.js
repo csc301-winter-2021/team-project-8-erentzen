@@ -1,8 +1,10 @@
 import React, { useState , useCallback }from 'react';
 import { Layout, Page, Tabs, Card, DataTable, Button, TextField, Icon } from '@shopify/polaris';
-import {Dashboard} from './Dashboard';
-import {InventoryUpdate} from './InventoryUpdate';
-import {Inventory} from './inventory';
+import DashboardPage from './DashboardPages';
+// import {InventoryUpdate} from '../components/InventoryUpdate';
+// import {Inventory} from '../components/inventory';
+import InventoryPage from './InventoryPage';
+import InventoryUpdatePage from './InventoryUpdatePage';
 // import '@shopify/polaris/styles.css';
 
 export default class NavTabs extends React.Component {
@@ -26,11 +28,11 @@ function TabsExample() {
     );
     const displaySection = (selected) => {
         if (selected === 0) {
-            return <Dashboard></Dashboard>
+            return <DashboardPage></DashboardPage>
         } else if(selected === 2) {
-            return <InventoryUpdate></InventoryUpdate>
+            return <InventoryUpdatePage></InventoryUpdatePage>
         } else if (selected === 1) {
-            return <Inventory></Inventory>
+            return <InventoryPage></InventoryPage>
         }
     }
     const tabs = [
