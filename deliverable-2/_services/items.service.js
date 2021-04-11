@@ -10,18 +10,18 @@ function fetchAll() {
     const requestOptions = {
         method : 'GET',
     };
-    return fetch(`https://csc301-erentzen.herokuapp.com//items/`, requestOptions).then(handleResponse)
+    return fetch(`https://csc301-erentzen.herokuapp.com/items/`, requestOptions).then(handleResponse)
  }
 
 function getRecentOrder(){
     const requestOptions = {
         method : 'GET',
     };
-    return fetch(`https://csc301-erentzen.herokuapp.com//orders/`, requestOptions).then(handleResponse)
+    return fetch(`https://csc301-erentzen.herokuapp.com/orders/`, requestOptions).then(handleResponse)
 }
 
 function updateInventory(id, count) {
-    const url = `https://csc301-erentzen.herokuapp.com//update/${id}`
+    const url = `https://csc301-erentzen.herokuapp.com/update/${id}`
 
     const request = new Request(url, {
         method: 'PATCH', 
