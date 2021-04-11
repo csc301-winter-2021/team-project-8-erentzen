@@ -64,6 +64,7 @@ module.exports = {
 }
 
 async function getAll() {
+    // add a section where we only select items coming from a specific store, store name will be used to detect it
     const select = `SELECT erentzen.variant.variant_id, item_name, description, price, stock, comleted as completed, quantity
     FROM erentzen.item JOIN erentzen.variant ON erentzen.item.item_id = erentzen.variant.item_id
     LEFT JOIN erentzen.item_order ON erentzen.variant.variant_id = erentzen.item_order.variant_id;`;
