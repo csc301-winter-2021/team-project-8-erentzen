@@ -76,7 +76,6 @@ app.prepare().then(() => {
       //Check database
       //For tutorial ONLY - check .env variable value
       if (storeService.checkLogin(shop.toString()) == true) {
-          console.log("already registered redirecting")
           ctx.redirect('/');
       } else {
           // go here if you don't have the token yet
@@ -89,6 +88,7 @@ app.prepare().then(() => {
       // replace later with the shop we get from url...
       storeService.getProducts("erentzen.myshopify.com")
     });
+
 
     router.get("/shopify/auth", async(ctx) => {
       ctx.redirect("https://erentzen.myshopify.com/admin/apps/erentzen-1")
@@ -142,17 +142,14 @@ app.prepare().then(() => {
                   };
                   request.get(options)
                     .then((response) => {
-                      // temporarily set to 5
-                      storeService.registerStore(shop.toString(), 9, accessToken)
+                      console.log(response, "responses")
+                      storeService.registerStore(shop.toString(), accessToken)
                       ctx.redirect('/shopify/app?shop=' + shop);
                       // ctx.redirect('https://erentzen.myshopify.com/admin/apps/shopify-graphiql-app')
-                      console.log("trying to redirect")
                     })
                     .catch((error) => {
                       console.log("Error:" + error)
                     })
-
-
                 })
               .catch((error) => {
                 console.log(error)
@@ -185,7 +182,6 @@ app.prepare().then(() => {
       });
 
     router.get('/items', async (ctx) => {
-      console.log(actualStore, "from items")
       items = await itemService.getAll(actualStore)
         .then(items => ctx.body = (items))
     })
