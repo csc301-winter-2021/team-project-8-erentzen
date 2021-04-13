@@ -22,8 +22,8 @@ function fetchAll() {
     function failure(error) { return { type: itemConstants.FETCH_FAILURE, error } }
 }
 
-function updateInventory(id, count) {
-    itemService.updateInventory(id, count)
+function updateInventory(vid, count) {
+    itemService.updateInventory(vid, count)
 }
 
 function getRecentOrder(){

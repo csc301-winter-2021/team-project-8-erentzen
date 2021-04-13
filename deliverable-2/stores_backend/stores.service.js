@@ -5,7 +5,8 @@ var request = require('request-promise');
 module.exports = {
     registerStore,
     checkLogin,
-    getProducts
+    getProducts,
+    updateInventory
 }
 
 async function registerStore(name, id, oauth) {
@@ -94,5 +95,83 @@ async function getProducts(shop) {
             .catch(function (err) {
                 console.log(err);
             });
-        }  
+    }
 }
+
+
+async function updateInventory(shop, location_id, variant_id, count) {
+    //Query a variant for its inventory item ID
+    // let shop = "erentzen.myshopify.com"
+    variant_id = 39638067216551 //test
+    let url = 'https://' + shop + `/admin/api/2021-04/variants/${variant_id}.json`
+    
+    let sql = `SELECT * FROM erentzen.store 
+    WHERE store_name = "${shop}";`;
+    const result = await con.promise().query(sql);
+    if (result[0].length > 0) {
+        const token = result[0][0].oauth_code;
+        const store_name = result[0][0].store_name
+        let options = {
+            method: 'GET',
+            uri: url,
+            json: true,
+            headers: {
+                'X-Shopify-Access-Token': token,
+                'content-type': 'application/json'
+            }
+        };
+        request(options)
+        .then(function (parsedBody) {
+            //Retrieve the item's inventory levels
+            //const inventory_item_id = 41732686413991
+            const inventory_item_id = parsedBody.variant.inventory_item_id
+            url = `https://${shop}/admin/api/2021-04/inventory_levels.json?inventory_item_ids=${inventory_item_id}`
+            options = {
+                method: 'GET',
+                uri: url,
+                json: true,
+                headers: {
+                    'X-Shopify-Access-Token': token,
+                    'content-type': 'application/json'
+                }
+            };
+
+            // request(options)
+            //     .then(function (parsedBody) {
+            //         // Update inventory levels for a product variant
+            //         if (parsedBody.inventory_levels[0]) {
+            //             // const location_id = location_id
+            //             console.log(parsedBody.inventory_levels)
+            //             const location_id = parsedBody.inventory_levels[0].location_id
+            //             url = 'https://' + shop + `/admin/api/2021-04/inventory_levels/set.json`
+            //             options = {
+            //                 method: 'POST',
+            //                 uri: url,
+            //                 json: true,
+            //                 headers: {
+            //                     'X-Shopify-Access-Token': token,
+            //                     'content-type': 'application/json'
+            //                 },
+            //                 body: JSON.stringify({
+            //                     "location_id": location_id,
+            //                     "inventory_item_id": inventory_item_id,
+            //                     "available": count
+            //                 })
+            //             };
+            //             request(options)
+            //             .catch(function (err) {
+            //                 console.log(err);
+            //             });
+            //         }
+            //     })
+            //     .catch(function (err) {
+            //         console.log(err);
+            //     });
+        })
+        .catch(function (err) {
+            console.log(err);
+        });
+    }
+    
+}
+
