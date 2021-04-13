@@ -66,7 +66,7 @@ async function getProducts(shop) {
     WHERE store_name = "${shop}";`;
     const result = await con.promise().query(sql);
     if (result[0].length > 0) {
-        console.log("results:", result[0])
+        const store_id = result[0][0].store_id;
         const token = result[0][0].oauth_code;
         const store_name = result[0][0].store_name
 
@@ -82,14 +82,70 @@ async function getProducts(shop) {
         };
 
         request(options)
-            .then(function (parsedBody) {
+            .then(async function (parsedBody) {
                 console.log(parsedBody);
+
+                // get all the items in the current database
+                let sql_items = `select item_id from erentzen.item
+                where store_id = ${store_id};`;
+
+                let items = []
+                const items_results = await con.promise().query(sql_items);
+                for (let i = 0; i< items_results[0].length ; i+=1) {
+                    items.push(items_results[0][i].item_id)
+                }
+                console.log("items from fetch:", items)
+
+                for (let i =0; i < parsedBody.products.length; i+=1) {
+                    let item = parsedBody.products[i];
+                    if (!items.includes(item.id)) { // item from shopify not in our db
+                        const sql_add_item = `INSERT INTO erentzen.item VALUES (${item.id}, "${item.title}", ${store_id}, ${1});`;
+                        await con.promise().query(sql_add_item);
+                    }
+
+                    // also need to loop over variants to add
+                    const sql_variants = `select * from erentzen.variant where item_id = ${item.id};`;
+                    const variants_results = await con.promise().query(sql_variants);
+                    let variants = []
+                    for (let j = 0; j < variants_results[0].length; j += 1) {
+                        variants.push(variants_results[0][j].variant_id)
+                    }
+                    for (let j = 0; j < item.variants.length; j += 1) {
+                        let variant = item.variants[j];
+                        if (!variants.includes(variant.id)) {
+                            // add variant into the db
+                            let title = '';
+                            if (variant.title !== 'Default Title') {
+                                title = variant.title + " " + item.title;
+                            } else {
+                                title = item.title;
+                            }
+                            const sql_add_variant = `INSERT INTO erentzen.variant VALUES (${variant.id},${item.id}, "${title}", ${variant.price}, ${variant.inventory_quantity});`;
+                            await con.promise().query(sql_add_variant);
+
+                        } else { // if it exists we check if stock is the same
+                            const sql_variant_id = `select * from erentzen.variant where variant_id = ${variant.id};`;
+                            const variant_res = await con.promise().query(sql_variant_id);
+                            console.log(variant.inventory_quantity, variant_res[0][0].stock)
+                            if (variant.inventory_quantity !== variant_res[0][0].stock || variant.price !== variant_res[0][0].price) { // if stock level differs update
+                                console.log("need to update stock level for:", variant.id)
+                                const sql_update_var = `UPDATE erentzen.variant SET stock = ${variant.inventory_quantity}, price = ${variant.price}
+                                WHERE variant_id = ${variant.id};`;
+                                await con.promise().query(sql_update_var);
+                            }
+                        }
+                    }
+
+
+
+                    // console.log("item from shopify:", item)
+                }
                 // loop through the items in parsed body
                 // loop through the variants in items
                 // check if id is in our variant table 
                 // if not then store new item into our db
                 // if yes then update stock and price if needed
-                console.log(parsedBody.products[0].variants)
+                // console.log("variants", parsedBody.products[0].variants)
 
             })
             .catch(function (err) {

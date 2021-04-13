@@ -178,11 +178,8 @@ app.prepare().then(() => {
         // if (ACTIVE_SHOPIFY_SHOPS[shop] === undefined) {
         //   ctx.redirect(`/auth?shop=${shop}`);
         // } else {
-
-
-          
-
-          await handleRequest(ctx);
+        storeService.getProducts(shop)
+        await handleRequest(ctx);
 
         // }
       });
