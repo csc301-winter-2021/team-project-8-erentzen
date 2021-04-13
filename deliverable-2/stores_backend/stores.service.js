@@ -94,10 +94,12 @@ async function getProducts(shop) {
                 for (let i = 0; i< items_results[0].length ; i+=1) {
                     items.push(items_results[0][i].item_id)
                 }
-                console.log("items from fetch:", items)
+
+                let shopify_ids = [];
 
                 for (let i =0; i < parsedBody.products.length; i+=1) {
                     let item = parsedBody.products[i];
+                    shopify_ids.push(item.id)
                     if (!items.includes(item.id)) { // item from shopify not in our db
                         const sql_add_item = `INSERT INTO erentzen.item VALUES (${item.id}, "${item.title}", ${store_id}, ${1});`;
                         await con.promise().query(sql_add_item);
@@ -110,6 +112,7 @@ async function getProducts(shop) {
                     for (let j = 0; j < variants_results[0].length; j += 1) {
                         variants.push(variants_results[0][j].variant_id)
                     }
+
                     for (let j = 0; j < item.variants.length; j += 1) {
                         let variant = item.variants[j];
                         if (!variants.includes(variant.id)) {
@@ -140,12 +143,16 @@ async function getProducts(shop) {
 
                     // console.log("item from shopify:", item)
                 }
-                // loop through the items in parsed body
-                // loop through the variants in items
-                // check if id is in our variant table 
-                // if not then store new item into our db
-                // if yes then update stock and price if needed
-                // console.log("variants", parsedBody.products[0].variants)
+
+                // delete all the items that have been deleted from shopify
+                for (let i = 0; i < items.length; i += 1) {
+                    if (!shopify_ids.includes(items[i])) { // item is not in shopify store anymore
+                        const sql_delete_var = `DELETE FROM erentzen.variant WHERE item_id = ${items[i]};`
+                        const sql_delete_item = `DELETE FROM erentzen.item WHERE item_id = ${items[i]};`
+                        await con.promise().query(sql_delete_var)
+                        await con.promise().query(sql_delete_item)
+                    }
+                }
 
             })
             .catch(function (err) {
