@@ -199,11 +199,7 @@ app.prepare().then(() => {
       const req = ctx.request.body
       res = await itemService.updateInventory(ctx.params.variant_id, req.count) 
       .then(res => ctx.body = (res))
-
-      //storeService.getProducts("erentzen.myshopify.com")
-      //TODO 
-      const location_id = "Need location_id"
-      storeService.updateInventory("erentzen.myshopify.com", location_id, ctx.params.variant_id, req.count)
+      storeService.updateInventory("erentzen.myshopify.com", ctx.params.variant_id, req.count)
     })
   
     router.get("(/_next/static/.*)", handleRequest);
