@@ -63,7 +63,7 @@ async function getRecentOrder(){
     console.log("no such store exists")
   }else{
     let store_id = storeResult[0].store_id;
-    const select = `SELECT order_id, item_name, description, quantity, data_time  
+    const select = `SELECT order_id, item_name, description, quantity 
     FROM erentzen.variant 
     JOIN erentzen.item_order 
     ON erentzen.variant.variant_id = erentzen.item_order.variant_id 

@@ -192,13 +192,13 @@ function RecentOrderTable(props) {
                         'numeric',
                         'numeric',
                         'numeric',
-                        'numeric'
+                        'numeric',
                     ]}
                     headings={[
-                        'ID',
+                        'Order ID',
                         'Product',
                         'Variant',
-                        'Count'
+                        'Count',
                     ]}
                     rows={rows}
                     sortable={[true, true, true, true]}
