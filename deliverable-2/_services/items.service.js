@@ -20,8 +20,8 @@ function getRecentOrder(){
     return fetch(`http://localhost:3000/orders/`, requestOptions).then(handleResponse)
 }
 
-function updateInventory(id, count) {
-    const url = `http://localhost:3000/update/${id}`
+function updateInventory(vid, count) {
+    const url = `http://localhost:3000/update/${vid}`
 
     const request = new Request(url, {
         method: 'PATCH', 

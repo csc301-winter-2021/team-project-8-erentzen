@@ -194,10 +194,15 @@ app.prepare().then(() => {
         .then(orders => ctx.body = (orders))
     })
 
-    router.patch('/update/:id', async (ctx) => {
+    router.patch('/update/:variant_id', async (ctx) => {
       const req = ctx.request.body
-      res = await itemService.updateInventory(ctx.params.id, req.count) 
+      res = await itemService.updateInventory(ctx.params.variant_id, req.count) 
       .then(res => ctx.body = (res))
+
+      //storeService.getProducts("erentzen.myshopify.com")
+      //TODO 
+      const location_id = "Need location_id"
+      storeService.updateInventory("erentzen.myshopify.com", location_id, ctx.params.variant_id, req.count)
     })
   
     router.get("(/_next/static/.*)", handleRequest);
