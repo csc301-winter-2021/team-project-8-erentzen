@@ -1,4 +1,9 @@
 // import config from 'config'
+const localUrl = "http://localhost:3000"
+const ngrokUrl = "https://dcefb6e277e1.ngrok.io"
+const productionUrl = "https://csc301-erentzen.herokuapp.com"
+
+const useUrl = ngrokUrl;
 
 export const itemService = {
     fetchAll,
@@ -10,18 +15,18 @@ function fetchAll() {
     const requestOptions = {
         method : 'GET',
     };
-    return fetch(`https://csc301-erentzen.herokuapp.com/items/`, requestOptions).then(handleResponse)
+    return fetch(`${useUrl}/items/`, requestOptions).then(handleResponse)
  }
 
 function getRecentOrder(){
     const requestOptions = {
         method : 'GET',
     };
-    return fetch(`https://csc301-erentzen.herokuapp.com/orders/`, requestOptions).then(handleResponse)
+    return fetch(`${useUrl}/orders/`, requestOptions).then(handleResponse)
 }
 
 function updateInventory(id, count) {
-    const url = `https://csc301-erentzen.herokuapp.com/update/${id}`
+    const url = `${useUrl}/update/${id}`
 
     const request = new Request(url, {
         method: 'PATCH', 

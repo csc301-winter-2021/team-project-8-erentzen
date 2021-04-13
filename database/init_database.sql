@@ -21,20 +21,20 @@ CREATE DATABASE erentzen;
 USE erentzen;
 
 CREATE TABLE store(
-    store_id BIGINT PRIMARY KEY,
+    store_id BIGINT PRIMARY KEY AUTO_INCREMENT,
     store_name VARCHAR(50) UNIQUE NOT NULL,
     oauth_code VARCHAR(100)
 );
 
 CREATE TABLE item(
-    item_id BIGINT PRIMARY KEY,
+    item_id BIGINT PRIMARY KEY AUTO_INCREMENT,
     item_name VARCHAR(50) NOT NULL,
     store_id BIGINT NOT NULL,
     merchant_item_id INT NOT NULL
 );
 
 CREATE TABLE variant(
-    variant_id BIGINT PRIMARY KEY,
+    variant_id BIGINT PRIMARY KEY AUTO_INCREMENT,
     item_id BIGINT,
     description VARCHAR(255),
     price DECIMAL(10, 2) NOT NULL,
@@ -43,7 +43,7 @@ CREATE TABLE variant(
 
 -- 'Order' is a reserved keyword in MySQL
 CREATE TABLE item_order(
-    order_id BIGINT PRIMARY KEY,
+    order_id BIGINT PRIMARY KEY AUTO_INCREMENT,
     comleted BOOL NOT NULL,
     variant_id BIGINT NOT NULL,
     quantity INT NOT NULL,
