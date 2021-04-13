@@ -68,10 +68,9 @@ class InventoryUpdate extends React.Component {
         for (var id in this.state.updates){
             const newCount = this.state.updates[id][6] + this.getInfo(id)[3]
             if (newCount < 0){
-                alert(`Product ${id} has negative count`)
-            }else{
-                itemActions.updateInventory(id, newCount)
+                alert(`Variant ${id} has negative count`)
             }
+            itemActions.updateInventory(id, newCount)
         }
         this.clear()
         

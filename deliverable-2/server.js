@@ -43,6 +43,7 @@ const ACTIVE_SHOPIFY_SHOPS = {};
 
 
 app.prepare().then(() => {
+    let actualStore = '';
     const server = new Koa();
     server.use(bodyParser());
     const router = new Router();
@@ -171,21 +172,21 @@ app.prepare().then(() => {
 
     router.get("/", async (ctx) => {
         const shop = ctx.query.shop;
+        console.log(shop, "from /")
+        actualStore = shop;
         // DO NOT UNCOMMENT OR DELETE
         // if (ACTIVE_SHOPIFY_SHOPS[shop] === undefined) {
         //   ctx.redirect(`/auth?shop=${shop}`);
         // } else {
-
-
-          
-
-          await handleRequest(ctx);
+        storeService.getProducts(shop)
+        await handleRequest(ctx);
 
         // }
       });
 
     router.get('/items', async (ctx) => {
-      items = await itemService.getAll()
+      console.log(actualStore, "from items")
+      items = await itemService.getAll(actualStore)
         .then(items => ctx.body = (items))
     })
 
@@ -194,10 +195,11 @@ app.prepare().then(() => {
         .then(orders => ctx.body = (orders))
     })
 
-    router.patch('/update/:id', async (ctx) => {
+    router.patch('/update/:variant_id', async (ctx) => {
       const req = ctx.request.body
-      res = await itemService.updateInventory(ctx.params.id, req.count) 
+      res = await itemService.updateInventory(ctx.params.variant_id, req.count) 
       .then(res => ctx.body = (res))
+      storeService.updateInventory("erentzen.myshopify.com", ctx.params.variant_id, req.count)
     })
   
     router.get("(/_next/static/.*)", handleRequest);

@@ -1,4 +1,9 @@
 // import config from 'config'
+const localUrl = "http://localhost:3000"
+const ngrokUrl = "https://dcefb6e277e1.ngrok.io"
+const productionUrl = "https://csc301-erentzen.herokuapp.com"
+
+const useUrl = ngrokUrl;
 
 export const itemService = {
     fetchAll,

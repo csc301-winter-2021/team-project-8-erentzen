@@ -63,37 +63,50 @@ module.exports = {
     getRecentOrder
 }
 
-async function getAll() {
+async function getAll(store) {
     // add a section where we only select items coming from a specific store, store name will be used to detect it
-    const select = `SELECT erentzen.variant.variant_id, item_name, description, price, stock, comleted as completed, quantity
-    FROM erentzen.item JOIN erentzen.variant ON erentzen.item.item_id = erentzen.variant.item_id
-    LEFT JOIN erentzen.item_order ON erentzen.variant.variant_id = erentzen.item_order.variant_id;`;
-    const query = await con.promise().query(select);
-    const result = query[0];
-    rows = []
-    for (i = 0; i < result.length; i++) {
-      pending = 0
-      if (result[i].quantity != null) {
-        if (result[i].completed != null) {
-          pending = result[i].quantity - result[i].completed
-        } else {
-          pending = result[i].quantity
-        }
-      } else {
+    const findStore = `SELECT * FROM erentzen.store
+    WHERE store_name = "${store}";`;
+    const storeQuery = await con.promise().query(findStore);
+    const storeResult = storeQuery[0];
+    if (storeResult.length <= 0) {
+      // error no store found
+      console.log("no such store exists")
+    } else {
+      let store_id = storeResult[0].store_id;
+      const itemQuery = `SELECT erentzen.variant.variant_id, item_name, description, price, stock, comleted as completed, quantity
+      FROM erentzen.item JOIN erentzen.variant
+      ON erentzen.item.item_id = erentzen.variant.item_id 
+      LEFT JOIN erentzen.item_order ON erentzen.variant.variant_id = erentzen.item_order.variant_id 
+      WHERE erentzen.item.store_id = ${store_id};`;
+
+      const itemResults = await con.promise().query(itemQuery);
+      const result = itemResults[0];
+      rows = []
+      for (i = 0; i < result.length; i++) {
         pending = 0
+        if (result[i].quantity != null) {
+          if (result[i].completed != null) {
+            pending = result[i].quantity - result[i].completed
+          } else {
+            pending = result[i].quantity
+          }
+        } else {
+          pending = 0
+        }
+        item = [
+            // item_id?
+            result[i].variant_id,
+            result[i].item_name,
+            result[i].description,
+            result[i].stock,
+            pending,
+            result[i].price
+          ]
+        rows.push(item)
       }
-      item = [
-          // item_id?
-          result[i].variant_id,
-          result[i].item_name,
-          result[i].description,
-          result[i].stock,
-          pending,
-          result[i].price
-        ]
-      rows.push(item)
-    }
-    return rows
+      return rows
+      }
 }
 
 async function getRecentOrder(){
@@ -115,6 +128,7 @@ async function getRecentOrder(){
 }
 
 async function updateInventory(id, count) {
+  // Store id
   const sql = `update erentzen.variant set stock = ${count} where variant_id = ${id};`
   await con.promise().query(sql);
 }
