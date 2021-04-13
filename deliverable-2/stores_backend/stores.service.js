@@ -9,7 +9,7 @@ module.exports = {
     updateInventory
 }
 
-async function registerStore(name, id, oauth) {
+async function registerStore(name, oauth) {
     try {
         // check if already in table
         let sql = `SELECT * FROM erentzen.store
@@ -23,11 +23,11 @@ async function registerStore(name, id, oauth) {
                 await con.promise().query(sql)
             }
         } else { // does not exists so we add into table
-            sql = `INSERT INTO erentzen.store (store_id, store_name, oauth_code)
-                        VALUES (${id}, '${name}', '${oauth}');`;
+            sql = `INSERT INTO erentzen.store (store_name, oauth_code)
+                        VALUES ('${name}', '${oauth}');`;
             await con.promise().query(sql);
         }
-        sql = `SELECT * FROM erentzen.store;`;
+        sql = `SELECT * FROM erentzen.item;`;
         const d = await con.promise().query(sql);
         console.log(d)
 
@@ -46,10 +46,8 @@ async function checkLogin(name) {
         const results = await con.promise().query(sql);
 
         if (results[0].length > 0) {
-            console.log("returning true")
             return true
         } else {
-            console.log("returning false")
             return false
         }
     } catch (e) {
