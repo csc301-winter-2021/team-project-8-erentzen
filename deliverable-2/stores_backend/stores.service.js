@@ -27,9 +27,9 @@ async function registerStore(name, oauth) {
                         VALUES ('${name}', '${oauth}');`;
             await con.promise().query(sql);
         }
-        sql = `SELECT * FROM erentzen.item;`;
-        const d = await con.promise().query(sql);
-        console.log(d)
+        // sql = `SELECT * FROM erentzen.item;`;
+        // const d = await con.promise().query(sql);
+        // console.log(d)
 
         // return the user in the future
     } catch (e) {

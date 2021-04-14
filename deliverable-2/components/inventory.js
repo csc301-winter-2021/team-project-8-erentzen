@@ -70,7 +70,7 @@ function Table(props) {
 
  
   const [sortedRows, setSortedRows] = useState(null);
-  const LOW_STOCK_THRESHOLD = 5;
+  const LOW_STOCK_THRESHOLD = 20;
 
   let filteredRows = [];
   let searchKeyword = ""
