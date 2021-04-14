@@ -87,7 +87,7 @@ class InventoryUpdate extends React.Component {
               
                 <Layout>
                     <Layout.Section>
-                        <UpdateForm onClick={this.addProduct} list={this.state.rows}></UpdateForm>
+                        <UpdateForm onClick={this.addProduct}></UpdateForm>
                     </Layout.Section>
 
                     <Layout.Section>
@@ -144,24 +144,24 @@ function Update(props) {
 } 
 
 function UpdateForm(props) {
-    const list = (list) => {
-        let tmp = []
-        var i;
-        for(i = 0; i < list.length; i++){
-            tmp.push({
-                label: list[i][0],
-                value: list[i][0]
-            })
-        }
-        return tmp
-    }
-    const options = list(props.list)
-    const [selected, setSelected] = useState(0);
-    const handleSelectChange = useCallback((value) => setSelected(value), []);
+    // const list = (list) => {
+    //     let tmp = []
+    //     var i;
+    //     for(i = 0; i < list.length; i++){
+    //         tmp.push({
+    //             label: list[i][0],
+    //             value: list[i][0]
+    //         })
+    //     }
+    //     return tmp
+    // }
+    // const options = list(props.list)
+    // const [selected, setSelected] = useState(0);
+    // const handleSelectChange = useCallback((value) => setSelected(value), []);
 
-    // const [pID, setPID] = useState(0);
+    const [pID, setPID] = useState(0);
     const [value, setValue] = useState(0);
-    //const handleChangeID = useCallback((newValue) => setPID(newValue), []);
+    const handleChangeID = useCallback((newValue) => setPID(newValue), []);
     const handleChangeAmount = useCallback((newValue) => setValue(newValue), []);
 
     const onClick = () => {
@@ -170,11 +170,11 @@ function UpdateForm(props) {
             setValue('')
             props.onClick(pID, parseInt(value));
         }
-        if(selected && value){
-            setSelected(0)
-            setValue('')
-            props.onClick(selected, parseInt(value));
-        }
+        // if(selected && value){
+        //     setSelected(0)
+        //     setValue('')
+        //     props.onClick(selected, parseInt(value));
+        // }
 
     };
 
@@ -193,8 +193,8 @@ function UpdateForm(props) {
         }
         sectioned>
             <FormLayout>
-                {/* <TextField label={"Product ID"} type={'number'} value={pID} onChange={handleChangeID} /> */}
-                <Select label={"Product ID"} options={options} onChange={handleSelectChange} value={selected}/>
+                <TextField label={"Product ID"} type={'number'} value={pID} onChange={handleChangeID} />
+                {/* <Select label={"Product ID"} options={options} onChange={handleSelectChange} value={selected}/> */}
                 <TextField label={"Amount"} type={'number'} value={value} onChange={handleChangeAmount} />
                 <Stack distribution="trailing">
                     <Button onClick={onClick} primary>Add</Button>
