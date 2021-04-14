@@ -25,7 +25,6 @@ class Dashboard extends Component {
           <Layout>
               <PieChart items={this.props.items.items} ></PieChart>
               <LowStkTable items={this.props.items.items}></LowStkTable>
-              {/* <RecentOrderTable orders={Array.isArray(this.props.orders) ? this.props.orders:[]}></RecentOrderTable> */}
               <RecentOrderTable orders={this.props.items.orders}></RecentOrderTable>
           </Layout>
         </Page>
@@ -51,11 +50,12 @@ function PieChart(props) {
             row[3] <= LOW_STOCK_THRESHOLD)
     }
    
+    // Return [number of low stock items, number of items not low in stock ]
     const setData = (rows) => {
         
         return [getLowStk(rows).length, rows.length-getLowStk(rows).length]
     }
-
+    // Formatting data required by Pie library
     let data = {
         labels:[
             'low stock',
@@ -98,6 +98,8 @@ function LowStkTable(props) {
     //     [5, "UofT T-Shirt", "White", 1, 0, 27.99]
     // ]
     const initiallySortedRows = Array.isArray( props.items) ? props.items:[]
+
+    // Filtering low stock items
     const getLowStk = (rows) => {
         return rows.filter(row =>
             row[3] <= LOW_STOCK_THRESHOLD)
@@ -107,11 +109,14 @@ function LowStkTable(props) {
 
     const rows = sortedRows ? sortedRows : filteredRows;
 
+    // Sort items by variables
+    // Handle states
     const handleSort = useCallback(
         (index, direction) => setSortedRows(sortRows(rows, index, direction)),
         [rows],
     );
 
+   
     const sortRows = (rows, index, direction) => {
         return [...rows].sort((rowA, rowB) => {
           const result = rowA[index] > rowB[index] ? 1 : -1;
@@ -160,10 +165,13 @@ function RecentOrderTable(props) {
     // ];
     // const initialOrderRows = props.orders
     const initialOrderRows = Array.isArray( props.orders) ? props.orders:[]
-    console.log(initialOrderRows, "order table")
+
+    // Filtered the most recent VIEW_NUM of orders
     let filteredRows = (initialOrderRows.length > VIEW_NUM) ? initialOrderRows.slice(0, VIEW_NUM) : initialOrderRows;
     const rows = sortedRows ? sortedRows : filteredRows;
     ;
+    // Sort Order Table by variables
+    //Handle sorted states
     const handleSort = useCallback(
         (index, direction) => setSortedRows(sortRows(rows, index, direction)),
         [rows],
@@ -184,28 +192,24 @@ function RecentOrderTable(props) {
                         'numeric',
                         'numeric',
                         'numeric',
-                        'numeric'
+                        'numeric',
                     ]}
                     headings={[
-                        'ID',
+                        'Order ID',
                         'Product',
                         'Variant',
-                        'Count'
+                        'Count',
                     ]}
                     rows={rows}
                     sortable={[true, true, true, true]}
                     defaultSortDirection="descending"
                     onSort={handleSort}
-                    // totals={['', '', '', 255, '$155,830.00']}
                 />
             </Card> 
         </Layout.Section>
     )
 }
 function mapState(state) {
-    console.log(state, "state")
-    // const { items, orders } = state;
-    // const{ orders } = state.orders;
     return state
   }
 
