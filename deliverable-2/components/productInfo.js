@@ -36,16 +36,7 @@ class ProductInfo extends React.Component {
                     title={'Product ID: ' + this.state.pid}
                     description={''}
                 >
-                    <img
-                        alt=""
-                        width="100%"
-                        height="100%"
-                        style={{
-                        objectFit: 'cover',
-
-                        }}
-                        src="https://burst.shopifycdn.com/photos/business-woman-smiling-in-office.jpg?width=1850"
-                    />
+                    
                 </MediaCard>
                       <Card title={''} sectioned>
                       <span>Name: {this.state.name}</span> <br />
@@ -53,25 +44,6 @@ class ProductInfo extends React.Component {
                       <span>Type: {this.state.type}</span> <br />
                     </Card>
                     
-                    <Card title={'Sales History'} sectioned>
-                        <DataTable
-                            description={'Sales History'}
-                            columnContentTypes={[
-                                'text',
-                                'numeric',
-                                'numeric',
-                                'text'
-                            ]}
-                            headings={[
-                                'Type',
-                                'Count',
-                                'Price',
-                                'Date'
-                            ]}
-                            rows={this.state.history}
-                            // totals={['', '', '', 255, '$155,830.00']}
-                        />
-                    </Card>
                 </Layout.Section>
             </Layout>
             
