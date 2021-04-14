@@ -81,7 +81,7 @@ export default function ProductModal(props) {
       >
         <Modal.Section>
           <MediaCard title={"Product ID: " + id} description={""}>
-            <img
+{/*             <img
               alt=""
               width="100%"
               height="100%"
@@ -89,7 +89,7 @@ export default function ProductModal(props) {
                 objectFit: "cover"
               }}
               src="https://burst.shopifycdn.com/photos/business-woman-smiling-in-office.jpg?width=1850"
-            />
+            /> */}
           </MediaCard>
           <Card title={"Details"} sectioned>
             <span>Name: {name}</span> <br />
@@ -97,7 +97,7 @@ export default function ProductModal(props) {
             <span>Type: {type}</span> <br />
           </Card>
 
-          <Card title={"Sales History"} sectioned>
+{/*           <Card title={"Sales History"} sectioned>
             <DataTable
               description={"Sales History"}
               columnContentTypes={["text", "numeric", "numeric", "text"]}
@@ -109,6 +109,7 @@ export default function ProductModal(props) {
               // totals={['', '', '', 255, '$155,830.00']}
             />
           </Card>
+           */}
         </Modal.Section>
       </Modal>
     </div>
